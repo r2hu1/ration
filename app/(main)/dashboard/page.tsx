@@ -1,7 +1,5 @@
+import { Plus } from "lucide-react";
+
 export default function DashboardPage() {
-  return (
-    <div>
-      <h1>Dash</h1>
-    </div>
-  );
+  return <div>Dashboard</div>;
 }
