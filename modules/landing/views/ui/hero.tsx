@@ -7,7 +7,7 @@ export default function Hero() {
         <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold leading-tight">
           Encrypted Cloud For Environment Variables
         </h1>
-        <p className="text-lg md:text-xl text-foreground/80 leading-relaxed">
+        <p className="text-sm sm:text-lg md:text-xl text-foreground/80 leading-relaxed">
           I always loose my environment variables. So i built this tool to help
           me manage them securely. It allows you to store and retrieve
           environment variables securely in the cloud. free and self-hostable
