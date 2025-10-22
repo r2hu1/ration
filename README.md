@@ -2,6 +2,8 @@
 
 An encrypted cloud platform for securely storing, syncing, and managing environment variables across all your projects and teams.
 
+![Screenshot](/public/preview.png)
+
 ## ✨ Features
 
 - **🔒 Secure Storage** - Enterprise-grade encryption for your sensitive data
