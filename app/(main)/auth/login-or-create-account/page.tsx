@@ -13,7 +13,7 @@ import { toast } from "sonner";
 
 export default function LoginOrCreateAccountPage() {
   const user = useSession();
-  if (user.data?.session) return redirect("/app/");
+  if (user.data?.session) return redirect("/dashboard/");
 
   const [showPassword, setShowPassword] = useState(false);
   const [loadingGoogle, setLoadingGoogle] = useState(false);
