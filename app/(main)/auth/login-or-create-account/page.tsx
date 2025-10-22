@@ -23,7 +23,7 @@ export default function LoginOrCreateAccountPage() {
     setLoadingGoogle(true);
     const { error } = await signIn.social({
       provider: method,
-      callbackURL: "/app/",
+      callbackURL: "/dashboard/",
     });
     if (error) {
       toast.error(error.message);
