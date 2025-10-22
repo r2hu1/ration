@@ -42,7 +42,7 @@ export default function LoginOrCreateAccountPage() {
       name: email.split("@")[0],
       email: email,
       password: password,
-      callbackURL: "/app/",
+      callbackURL: "/dashboard/",
     });
     if (error) {
       if (error.code == "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL") {
