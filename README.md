@@ -1,4 +1,4 @@
-# Ration
+# Ration (self-hostable)
 
 An encrypted cloud platform for securely storing, syncing, and managing environment variables across all your projects and teams.
 
