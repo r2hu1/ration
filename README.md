@@ -1,36 +1,155 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ration
 
-## Getting Started
+An encrypted cloud platform for securely storing, syncing, and managing environment variables across all your projects and teams.
 
-First, run the development server:
+## ✨ Features
 
+- **🔒 Secure Storage** - Enterprise-grade encryption for your sensitive data
+- **🔑 Easy Access** - Simple and intuitive interface for managing environment variables
+- **🛡️ Encrypted** - End-to-end encryption ensures your data stays private
+- **⚡ Fast Sync** - Quick synchronization across all your projects and environments
+
+## 🚀 Tech Stack
+
+- **Frontend**: Next.js 15 with React 19
+- **Styling**: Tailwind CSS with Radix UI components
+- **Database**: PostgreSQL with Drizzle ORM
+- **Authentication**: Better Auth
+- **Runtime**: Bun
+- **TypeScript**: Full type safety throughout
+
+## 📦 Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/r2hu1/ration.git
+cd ration
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+bun install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Set up your environment variables:
+```bash
+cp .env.example .env.local
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Configure your database connection in `.env.local`:
+```env
+DATABASE_URL="postgresql://username:password@localhost:5432/ration"
+```
 
-## Learn More
+5. Push the database schema:
+```bash
+bun run db:push
+```
 
-To learn more about Next.js, take a look at the following resources:
+6. Start the development server:
+```bash
+bun run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The application will be available at `http://localhost:3000`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🛠️ Development
 
-## Deploy on Vercel
+### Available Scripts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `bun run dev` - Start development server with Turbopack
+- `bun run build` - Build for production
+- `bun run start` - Start production server
+- `bun run lint` - Run Biome linting
+- `bun run format` - Format code with Biome
+- `bun run db:push` - Push database schema changes
+- `bun run db:studio` - Open Drizzle Studio
+- `bun run schema:generate` - Generate database migrations
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Project Structure
+
+```
+ration/
+├── app/
+│   ├── (main)/
+│   │   ├── auth/          # Authentication pages
+│   │   └── dashboard/     # Dashboard pages
+│   ├── (root)/            # Landing page
+│   └── api/               # API routes
+├── components/            # Reusable UI components
+├── db/                    # Database schema and configuration
+├── drizzle/              # Database migrations
+├── lib/                  # Utility functions and configurations
+├── modules/              # Feature modules
+└── public/               # Static assets
+```
+
+## 🔧 Configuration
+
+### Environment Variables
+
+Create a `.env.local` file with the following variables:
+
+```env
+DATABASE_URL="your-postgresql-connection-string"
+BETTER_AUTH_SECRET=
+BETTER_AUTH_URL=
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GMAIL_USER=
+GMAIL_PASS=
+GITHUB_CLIENT_ID=
+GITHUB_CLIENT_SECRET=
+```
+
+### Database Setup
+
+This project uses PostgreSQL with Drizzle ORM. Make sure you have PostgreSQL running and create a database for the application.
+
+## 🚀 Deployment
+
+1. Build the application:
+```bash
+bun run build
+```
+
+2. Set up your production environment variables
+
+3. Push the database schema to production:
+```bash
+bun run db:push
+```
+
+4. Start the production server:
+```bash
+bun run start
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit your changes: `git commit -m 'Add amazing feature'`
+4. Push to the branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🔗 Links
+
+- [GitHub Repository](https://github.com/r2hu1/ration)
+- [Issues](https://github.com/r2hu1/ration/issues)
+
+## 💡 Why Ration?
+
+Managing environment variables across multiple projects, environments, and team members can be challenging. Ration solves this by providing a secure, centralized platform where you can:
+
+- Store sensitive configuration data with enterprise-grade encryption
+- Easily share environment variables with team members
+- Sync configurations across development, staging, and production environments
+- Maintain version history and audit trails
+- Access your variables from anywhere with a simple, intuitive interface
+
+Built with modern web technologies and security best practices, Ration ensures your sensitive data remains protected while being easily accessible to authorized users.
