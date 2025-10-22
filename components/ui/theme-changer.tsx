@@ -11,7 +11,7 @@ export function ThemeChanger() {
     <Button
       onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
       size="icon-sm"
-      variant="ghost"
+      variant="outline"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
