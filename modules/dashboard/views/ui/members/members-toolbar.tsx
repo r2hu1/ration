@@ -33,7 +33,7 @@ export default function MembersToolbar({ teamId }: { teamId: string }) {
               <List className="size-4" />
             </Button>
           </ButtonGroup>
-          <InviteMembers>
+          <InviteMembers teamId={teamId}>
             <Button>
               Invite Someone <UserPlus className="ml-auto size-4" />
             </Button>

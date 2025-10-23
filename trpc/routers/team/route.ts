@@ -3,7 +3,8 @@ import z from "zod";
 import { TRPCError } from "@trpc/server";
 import { db } from "@/db/client";
 import { eq, or } from "drizzle-orm";
-import { teams } from "@/db/schema";
+import { teamInvites, teams, user } from "@/db/schema";
+import { sendEmail } from "@/lib/email";
 
 const createTeamSchema = z.object({
   name: z.string().min(4).max(100),
@@ -47,4 +48,78 @@ export const teamRouter = createTRPCRouter({
 
     return allTeams;
   }),
+  invite: protectedProcedure
+    .input(
+      z.object({
+        email: z.email(),
+        teamId: z.string(),
+        role: z.enum(["admin", "member", "guest"]),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const [team] = await db
+        .select()
+        .from(teams)
+        .where(eq(teams.slug, input.teamId));
+
+      console.log(team);
+
+      const invite = await db
+        .insert(teamInvites)
+        .values({
+          email: input.email,
+          role: input.role,
+          invited_by: ctx.auth.session.userId,
+          team_id: team.id,
+        })
+        .returning();
+      console.log(invite);
+
+      await sendEmail({
+        type: "invite",
+        to: input.email,
+        subject: `You've been invited to join ${team.name}`,
+        text: `You've been invited to join ${team.name} as a ${input.role}. click on this link to accept the invitation ${process.env.BETTER_AUTH_URL}~/invite/${invite[0].id}`,
+      });
+
+      return invite;
+    }),
+
+  get_invite_details: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input, ctx }) => {
+      const [invite] = await db
+        .select()
+        .from(teamInvites)
+        .where(eq(teamInvites.id, input.id));
+
+      if (!invite) throw new TRPCError({ code: "NOT_FOUND" });
+      if (invite.email !== ctx.auth.user.email) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
+      const invitedByName = await db
+        .select()
+        .from(user)
+        .where(eq(user.id, invite.invited_by))
+        .then((res) => res[0].name);
+
+      const [team] = await db
+        .select()
+        .from(teams)
+        .where(eq(teams.id, invite.team_id));
+
+      if (!team) throw new TRPCError({ code: "NOT_FOUND" });
+      return {
+        email: invite.email,
+        role: invite.role,
+        invited_by: invitedByName,
+        team: {
+          id: team.id,
+          name: team.name,
+          slug: team.slug,
+        },
+        invited_on: invite.createdAt,
+      };
+    }),
 });

@@ -56,7 +56,6 @@ export default function CreateTeam({
   const queryClient = useQueryClient();
 
   const handleTeamCreation = () => {
-    if (status != "idle") return;
     mutate(
       { name: name.replace(/\s+/g, "-").toLowerCase() },
       {

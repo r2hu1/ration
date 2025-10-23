@@ -1,7 +1,7 @@
 import transporter from "./transporter";
 
 interface SendEmailProps {
-  type: "reset-password" | "verify-email" | "delete-account";
+  type: "reset-password" | "verify-email" | "delete-account" | "invite";
   to: string;
   subject: string;
   text: string;
@@ -10,16 +10,20 @@ interface SendEmailProps {
 export async function sendEmail({ type, to, subject, text }: SendEmailProps) {
   const emailTemplate: Record<string, string> = {
     "reset-password": `
-    <p>You requested a password reset.</p>
-    <p>${text}</p>
+    <h1>You requested a password reset.</h1>
+    <h2>${text}</h2>
     <p>If you did not request this, please ignore this email.</p>`,
     "verify-email": `
-    <p>Email verification.</p>
-    <p>${text}</p>
+    <h1>Email verification.</h1>
+    <h2>${text}</h2>
     <p>If you did not request this, please ignore this email.</p>`,
     "delete-account": `
-    <p>Delete your account.</p>
-    <p>${text}</p>
+    <h1>Delete your account</h1>
+    <h2>${text}</h2>
+    <p>If you did not request this, please ignore this email.</p>`,
+    invite: `
+    <h1>Invite</h1>
+    <h2>${text}</h2>
     <p>If you did not request this, please ignore this email.</p>`,
   };
 

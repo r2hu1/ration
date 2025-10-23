@@ -6,6 +6,7 @@ export default async function Members({
   params: { teamId: string };
 }) {
   const param = await params;
+  console.log(param.teamId);
   return (
     <div>
       <MembersToolbar teamId={param.teamId} />

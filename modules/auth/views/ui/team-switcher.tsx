@@ -17,8 +17,8 @@ import { useTRPC } from "@/trpc/client";
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronsUpDown, Plus, Users } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function TeamSwitcher() {
   const [position, setPosition] = useState("");
@@ -43,11 +43,25 @@ export default function TeamSwitcher() {
             : "Unknown";
   };
 
+  const path = usePathname();
+  const teamId = path.split("/")[2];
+
   const router = useRouter();
   const handleTeamSwitch = (e: any) => {
     setPosition(e);
     router.push(`/~/${e}`);
   };
+
+  useEffect(() => {
+    if (teams && teams.length > 0 && !position) {
+      const currentTeam = teams.find((team) => team.slug === teamId);
+      setPosition(
+        currentTeam?.slug ||
+          data?.user?.name.split(" ").join("-").toLowerCase(),
+      );
+    }
+  }, [teams, teamId, position, data?.session]);
+
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>

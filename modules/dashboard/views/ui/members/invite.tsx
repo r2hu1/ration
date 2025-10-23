@@ -41,8 +41,10 @@ import {
 
 export default function InviteMembers({
   children,
+  teamId,
 }: {
   children: React.ReactNode;
+  teamId: string;
 }) {
   const isMobile = useIsMobile();
   const Slot = isMobile ? Drawer : AlertDialog;
@@ -56,17 +58,28 @@ export default function InviteMembers({
   const SlotCancel = isMobile ? DrawerClose : AlertDialogCancel;
 
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState<"member" | "admin" | "guest">("member");
+  const [role, setRole] = useState<any>("member");
   const [modalOpen, setModalOpen] = useState(false);
 
   const trpc = useTRPC();
   const { mutate, isPending, error, status } = useMutation(
-    trpc.teams.create.mutationOptions(),
+    trpc.teams.invite.mutationOptions(),
   );
-  const queryClient = useQueryClient();
 
-  const handleTeamCreation = () => {
-    if (status != "idle") return;
+  const handleTeamInvite = () => {
+    mutate(
+      { email: email, teamId: teamId, role: role },
+      {
+        onSettled: () => {
+          setModalOpen(false);
+          setRole("member");
+          setEmail("");
+        },
+        onSuccess: () => {
+          toast.success("Collaborator invitation sent successfully");
+        },
+      },
+    );
   };
   if (error) {
     toast.error(error.message);
@@ -114,7 +127,7 @@ export default function InviteMembers({
         </SlotHeader>
         <SlotFooter className="sm:flex grid grid-cols-2 gap-3">
           <SlotCancel disabled={isPending}>Cancel</SlotCancel>
-          <Button disabled={isPending} onClick={handleTeamCreation}>
+          <Button disabled={isPending} onClick={handleTeamInvite}>
             {isPending && <Loader />}
             Continue
           </Button>
