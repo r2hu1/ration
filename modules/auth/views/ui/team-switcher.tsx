@@ -51,11 +51,7 @@ export default function TeamSwitcher() {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="secondary"
-          className="bg-secondary/50 sm:min-w-[150px] gap-2"
-          size="sm"
-        >
+        <Button variant="ghost" className="sm:min-w-[150px] gap-2" size="sm">
           {teams?.filter((team) => team.slug === position)?.[0]?.name ||
             data?.user.name}
           <ChevronsUpDown className="size-3.5 ml-auto" />

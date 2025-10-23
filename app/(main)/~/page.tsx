@@ -1,10 +1,7 @@
-import Toolbar from "@/modules/dashboard/views/ui/toolbar";
-import { Plus } from "lucide-react";
+import { isAuthenticated } from "@/lib/cache/auth";
+import { redirect } from "next/navigation";
 
-export default function DashboardPage() {
-  return (
-    <div>
-      <Toolbar />
-    </div>
-  );
+export default async function DashboardPage() {
+  const user = await isAuthenticated();
+  return redirect("/~/" + user?.user.name.toLowerCase().split(" ").join("-"));
 }

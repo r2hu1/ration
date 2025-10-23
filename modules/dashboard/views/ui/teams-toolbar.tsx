@@ -5,8 +5,9 @@ import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 import { FolderCog, Grid2X2, List, Search } from "lucide-react";
 import { useState } from "react";
 
-export default function TeamsToolbar() {
+export default function TeamsToolbar({ teamId }: { teamId: string }) {
   const [viewType, setViewType] = useState<"grid" | "list">("grid");
+
   return (
     <div>
       <div className="grid sm:flex w-full gap-3">
