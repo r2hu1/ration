@@ -1,5 +1,6 @@
 "use client";
 import { useAuthState } from "@/components/providers/auth-context";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -26,14 +27,18 @@ export default function TeamSwitcher() {
           {data?.user?.name}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 ml-[70px]">
+      <DropdownMenuContent className="w-[300px] ml-[70px]">
         <DropdownMenuLabel className="flex items-center">
           Select or Create team <Users className="size-4 ml-auto" />
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
-          <DropdownMenuRadioItem value="default">
+          <DropdownMenuRadioItem value="default" className="grid gap-px">
             {data?.user?.name}
+            <div className="flex items-center justify-between w-full">
+              <p className="text-xs">Personal Workspace</p>
+              <Badge variant="outline">Owner</Badge>
+            </div>
           </DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
         <DropdownMenuSeparator />
