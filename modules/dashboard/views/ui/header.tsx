@@ -5,13 +5,16 @@ import Link from "next/link";
 import { Logo } from "@/modules/landing/views/ui/logo";
 import { Logout } from "@/modules/auth/views/ui/logout";
 import User from "@/modules/auth/views/ui/user";
-import { Star } from "lucide-react";
+import { Container, Star } from "lucide-react";
+import TeamSwitcher from "@/modules/auth/views/ui/team-switcher";
 
 export default function Header() {
   return (
     <header className="flex items-center justify-between py-5 px-6">
-      <div>
-        <Logo />
+      <div className="flex items-center gap-2">
+        <Container className="h-4! w-4!" />
+        <span className="text-foreground/40 text-sm">/</span>
+        <TeamSwitcher />
       </div>
       <div className="flex items-center gap-2.5">
         <Button asChild size="icon-sm" variant="outline">
