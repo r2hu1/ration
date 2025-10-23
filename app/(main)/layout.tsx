@@ -7,7 +7,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <TRPCReactProvider>
       <AuthProvider>
         <Header />
-        <div className="px-6 md:px-20 py-10">{children}</div>
+        <div className="px-6 md:px-10">{children}</div>
       </AuthProvider>
     </TRPCReactProvider>
   );

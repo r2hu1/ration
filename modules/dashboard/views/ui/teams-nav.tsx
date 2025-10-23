@@ -58,38 +58,40 @@ export default function TeamsNav() {
   }, [active]);
 
   return (
-    <div
-      className="flex space-x-8 mb-8 border-b sm:overflow-auto overflow-x-scroll relative"
-      onMouseLeave={handleLeave}
-    >
-      {tabs.map((tab) => {
-        const isActive = active === tab.label;
-        return (
-          <Link
-            key={tab.label}
-            href={tab.href}
-            onMouseEnter={handleHover}
-            data-active={isActive}
-            className={`py-2 px-1 z-10 font-medium text-sm transition-colors ${
-              isActive
-                ? "text-primary"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            {tab.label}
-          </Link>
-        );
-      })}
+    <div className="border-b mb-8 px-6">
+      <div
+        className="flex space-x-8 sm:overflow-auto overflow-x-scroll relative"
+        onMouseLeave={handleLeave}
+      >
+        {tabs.map((tab) => {
+          const isActive = active === tab.label;
+          return (
+            <Link
+              key={tab.label}
+              href={tab.href}
+              onMouseEnter={handleHover}
+              data-active={isActive}
+              className={`py-2 px-1 z-10 font-medium text-sm transition-colors ${
+                isActive
+                  ? "text-primary"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {tab.label}
+            </Link>
+          );
+        })}
 
-      {indicatorStyle && (
-        <div
-          className="absolute bottom-0 h-0.5 bg-primary transition-all duration-300 ease-in-out"
-          style={{
-            width: indicatorStyle.width,
-            left: indicatorStyle.left,
-          }}
-        />
-      )}
+        {indicatorStyle && (
+          <div
+            className="absolute bottom-0 h-0.5 bg-primary transition-all duration-300 ease-in-out"
+            style={{
+              width: indicatorStyle.width,
+              left: indicatorStyle.left,
+            }}
+          />
+        )}
+      </div>
     </div>
   );
 }
