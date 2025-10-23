@@ -25,7 +25,7 @@ export default function LoginOrCreateAccountPage() {
     setLoadingGoogle(true);
     const { error } = await signIn.social({
       provider: method,
-      callbackURL: param.get("callbackURL") || "/~/",
+      callbackURL: param.get("callbackURL") || window.location.origin + "/~",
     });
     if (error) {
       toast.error(error.message);
@@ -45,7 +45,7 @@ export default function LoginOrCreateAccountPage() {
       name: email.split("@")[0],
       email: email,
       password: password,
-      callbackURL: param.get("callbackURL") || "/~/",
+      callbackURL: param.get("callbackURL") || window.location.origin + "/~",
     });
     if (error) {
       if (error.code == "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL") {
