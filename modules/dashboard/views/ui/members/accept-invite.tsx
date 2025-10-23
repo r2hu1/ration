@@ -39,19 +39,19 @@ export default function AcceptInvite({ inviteId }: { inviteId: string }) {
         </p>
         <div className="grid gap-2 py-2 mt-4.5">
           <div className="flex flex-wrap items-center justify-between">
-            <h1>Invited By</h1>
+            <h1 className="text-sm">Invited By</h1>
             <span className="font-bold text-sm">{data?.invited_by}</span>
           </div>
           <div className="flex flex-wrap items-center justify-between">
-            <h1>Your Email</h1>
+            <h1 className="text-sm">Your Email</h1>
             <span className="font-bold text-sm">{data?.email}</span>
           </div>
           <div className="flex flex-wrap items-center justify-between">
-            <h1>Joining As</h1>
+            <h1 className="text-sm">Joining As</h1>
             <span className="font-bold text-sm">{data?.role}</span>
           </div>
           <div className="flex flex-wrap items-center justify-between">
-            <h1>Invited On</h1>
+            <h1 className="text-sm">Invited On</h1>
             <span className="font-bold text-sm">
               {data?.invited_on
                 ? new Date(data?.invited_on).toDateString()
