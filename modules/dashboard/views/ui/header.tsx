@@ -11,8 +11,8 @@ import TeamsNav from "./teams-nav";
 
 export default function Header() {
   return (
-    <header>
-      <div className="px-6 flex items-center justify-between py-4">
+    <header className="bg-background">
+      <div className="px-6 flex items-center justify-between py-4 pb-2">
         <div className="flex items-center gap-2">
           <Container className="h-4! w-4!" />
           <span className="text-foreground/40 text-sm">/</span>

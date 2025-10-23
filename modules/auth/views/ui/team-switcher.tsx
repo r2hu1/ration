@@ -21,7 +21,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function TeamSwitcher() {
-  const [position, setPosition] = useState("default");
+  const [position, setPosition] = useState("");
   const { data } = useAuthState();
 
   const trpc = useTRPC();
@@ -46,12 +46,16 @@ export default function TeamSwitcher() {
   const router = useRouter();
   const handleTeamSwitch = (e: any) => {
     setPosition(e);
-    router.push(`/~/${e != "default" ? e : ""}`);
+    router.push(`/~/${e}`);
   };
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="sm:min-w-[150px] gap-2" size="sm">
+        <Button
+          variant="secondary"
+          className="bg-secondary/40 sm:min-w-[150px] gap-2"
+          size="sm"
+        >
           {teams?.filter((team) => team.slug === position)?.[0]?.name ||
             data?.user.name}
           <ChevronsUpDown className="size-3.5 ml-auto" />
@@ -68,7 +72,10 @@ export default function TeamSwitcher() {
             onValueChange={handleTeamSwitch}
             className="max-h-64"
           >
-            <DropdownMenuRadioItem value="default" className="grid gap-px">
+            <DropdownMenuRadioItem
+              value={data?.user?.name.split(" ").join("-").toLowerCase()}
+              className="grid gap-px"
+            >
               {data?.user?.name}
               <div className="flex items-center justify-between w-full">
                 <p className="text-xs">Personal Workspace</p>

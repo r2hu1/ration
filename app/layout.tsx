@@ -21,7 +21,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.className} antialiased`}>
+      <body
+        className={`${geistSans.className} antialiased dark:bg-background bg-[#FAFAFA]`}
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
