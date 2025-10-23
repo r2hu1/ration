@@ -1,7 +1,5 @@
 import EmptyProject from "@/modules/dashboard/views/ui/project/empty";
-import TeamsNav from "@/modules/dashboard/views/ui/teams-nav";
 import TeamsToolbar from "@/modules/dashboard/views/ui/teams-toolbar";
-import { AlertTriangle } from "lucide-react";
 
 export default async function TeamDashboard({
   params,
