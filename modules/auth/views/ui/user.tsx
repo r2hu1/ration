@@ -42,7 +42,7 @@ export default function User() {
       </SlotTrigger>
       <SlotContent
         className={
-          !isMobile ? "mr-10 w-[250px]" : "px-4 pb-4 grid gap-5 text-sm"
+          !isMobile ? "mr-10 w-[250px] mt-2" : "px-4 pb-4 grid gap-5 text-sm"
         }
       >
         {isMobile && (

@@ -6,7 +6,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <main>
       <AuthProvider>
         <Header />
-        <div className="px-6">{children}</div>
+        <div className="px-6 md:px-20 lg:px-28 py-10">{children}</div>
       </AuthProvider>
     </main>
   );
