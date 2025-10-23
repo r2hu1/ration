@@ -60,10 +60,18 @@ export default function User() {
         </div>
         <SlotSeparator className="hidden sm:flex" />
         <SlotItem asChild>
-          <Link href="/dashboard">Dashboard</Link>
+          <Link
+            href={`/~/${data?.user?.name.split(" ").join("-").toLowerCase()}`}
+          >
+            Dashboard
+          </Link>
         </SlotItem>
         <SlotItem asChild>
-          <Link href="/account">Account Settings</Link>
+          <Link
+            href={`/~/${data?.user?.name.split(" ").join("-").toLowerCase()}/account`}
+          >
+            Account Settings
+          </Link>
         </SlotItem>
         <CreateTeam>
           <SlotItem
