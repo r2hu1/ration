@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader } from "@/components/ui/loader";
 import { useTRPC } from "@/trpc/client";
@@ -8,18 +9,22 @@ import { useRouter } from "next/navigation";
 
 export default function AcceptInvite({ inviteId }: { inviteId: string }) {
   const trpc = useTRPC();
-  const { data, isPending, error, isError } = useQuery(
+  const { data, isPending, error } = useQuery(
     trpc.teams.get_invite_details.queryOptions({ id: inviteId }),
   );
 
   const router = useRouter();
 
+  useEffect(() => {
+    if (!isPending && error) {
+      router.push("/~");
+    }
+  }, [isPending, error, router]);
+
   const handleAccept = async () => {};
 
   const handleReject = async () => {};
-  if (!isPending && error) {
-    return router.push("/~");
-  }
+
   if (isPending) {
     return (
       <div className="flex items-center justify-center gap-3 max-w-md w-full border bg-background p-6">
@@ -27,6 +32,10 @@ export default function AcceptInvite({ inviteId }: { inviteId: string }) {
         <h1 className="text-sm text-foreground/80">Loading Invite...</h1>
       </div>
     );
+  }
+
+  if (!isPending && error) {
+    return null;
   }
 
   return (
