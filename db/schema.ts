@@ -80,18 +80,9 @@ export const teams = pgTable("teams", {
   owner: text("owner")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
-  members: jsonb("members")
-    .notNull()
-    .default([])
-    .references(() => user.id, { onDelete: "cascade" }),
-  admins: jsonb("admins")
-    .notNull()
-    .default([])
-    .references(() => user.id, { onDelete: "cascade" }),
-  guests: jsonb("guests")
-    .notNull()
-    .default([])
-    .references(() => user.id, { onDelete: "cascade" }),
+  members: jsonb("members").notNull().default([]),
+  admins: jsonb("admins").notNull().default([]),
+  guests: jsonb("guests").notNull().default([]),
   projects: jsonb("projects").notNull().default([]),
   createdAt: timestamp("created_at").$defaultFn(
     () => /* @__PURE__ */ new Date(),
