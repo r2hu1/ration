@@ -14,8 +14,6 @@ import { toast } from "sonner";
 
 export default function LoginOrCreateAccountPage() {
   const user = useSession();
-  const param = new URLSearchParams(window.location.search);
-
   if (user.data?.session) return redirect("/~/");
 
   const [showPassword, setShowPassword] = useState(false);
@@ -23,6 +21,7 @@ export default function LoginOrCreateAccountPage() {
   const [loadingManual, setLoadingManual] = useState(false);
 
   const handleSocialLogin = async (method: "google" | "github") => {
+    const param = new URLSearchParams(window.location.search);
     setLoadingGoogle(true);
     const { error } = await signIn.social({
       provider: method,
