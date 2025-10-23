@@ -29,6 +29,7 @@ import {
   Search,
   Users,
 } from "lucide-react";
+import { useState } from "react";
 
 export default function Toolbar() {
   const isMobile = useIsMobile();
@@ -37,6 +38,8 @@ export default function Toolbar() {
   const SlotTrigger = isMobile ? DrawerTrigger : DropdownMenuTrigger;
   const SlotItem = isMobile ? "div" : DropdownMenuItem;
   const SlotSeparator = isMobile ? "div" : DropdownMenuSeparator;
+
+  const [viewType, setViewType] = useState<"grid" | "list">("grid");
   return (
     <div>
       <div className="grid sm:flex w-full gap-3">
@@ -45,11 +48,19 @@ export default function Toolbar() {
           <InputGroupInput type="text" placeholder="Search your projects" />
         </InputGroup>
         <div className="grid grid-cols-2 sm:flex gap-3">
-          <ButtonGroup>
-            <Button variant="outline" size="icon">
+          <ButtonGroup className="border p-[1.5px]">
+            <Button
+              onClick={() => setViewType("grid")}
+              variant={viewType === "grid" ? "secondary" : "ghost"}
+              size="icon-sm"
+            >
               <Grid2X2 className="size-4" />
             </Button>
-            <Button variant="outline" size="icon">
+            <Button
+              onClick={() => setViewType("list")}
+              variant={viewType === "list" ? "secondary" : "ghost"}
+              size="icon-sm"
+            >
               <List className="size-4" />
             </Button>
           </ButtonGroup>
