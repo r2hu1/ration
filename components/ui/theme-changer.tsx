@@ -4,7 +4,7 @@ import * as React from "react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 
-export function ThemeChanger() {
+export function ThemeChanger({ ...props }) {
   const { setTheme, resolvedTheme } = useTheme();
 
   return (
@@ -12,6 +12,7 @@ export function ThemeChanger() {
       onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
       size="icon-sm"
       variant="outline"
+      {...props}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

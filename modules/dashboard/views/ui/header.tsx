@@ -4,14 +4,16 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Logo } from "@/modules/landing/views/ui/logo";
 import { Logout } from "@/modules/auth/views/ui/logout";
+import User from "@/modules/auth/views/ui/user";
 
 export default function Header() {
   return (
-    <header className="flex items-center justify-between max-w-5xl mx-auto px-6 py-5">
-      <Logo />
+    <header className="flex items-center justify-between py-5 px-6">
+      <div>
+        <Logo />
+      </div>
       <div className="flex items-center gap-2">
-        <Logout size="sm" />
-        <ThemeChanger />
+        <User />
       </div>
     </header>
   );
