@@ -37,7 +37,7 @@ export default function TeamSwitcher() {
         </DropdownMenuRadioGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="p-0 border-0 outline-0">
-          <Button variant="outline" className="w-full" size="sm">
+          <Button variant="ghost" className="w-full" size="sm">
             Create Team <Plus className="size-4 ml-auto" />
           </Button>
         </DropdownMenuItem>
