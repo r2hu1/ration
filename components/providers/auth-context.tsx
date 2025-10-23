@@ -11,7 +11,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (!isPending && !data?.session) {
-      router.push("/auth/login-or-create-account");
+      router.push(
+        "/auth/login-or-create-account?callbackURL=" +
+          encodeURIComponent(window.location.href),
+      );
     }
   }, [isPending]);
 

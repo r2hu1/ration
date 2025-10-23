@@ -8,23 +8,24 @@ import { signIn, signUp, useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/modules/landing/views/ui/logo";
 import { Eye, EyeOff, Github, PenTool } from "lucide-react";
-import { redirect } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { toast } from "sonner";
 
 export default function LoginOrCreateAccountPage() {
   const user = useSession();
-  if (user.data?.session) return redirect("/dashboard/");
+  if (user.data?.session) return redirect("/~/");
 
   const [showPassword, setShowPassword] = useState(false);
   const [loadingGoogle, setLoadingGoogle] = useState(false);
   const [loadingManual, setLoadingManual] = useState(false);
+  const param = useSearchParams();
 
   const handleSocialLogin = async (method: "google" | "github") => {
     setLoadingGoogle(true);
     const { error } = await signIn.social({
       provider: method,
-      callbackURL: "/dashboard/",
+      callbackURL: param.get("callbackURL") || "/~/",
     });
     if (error) {
       toast.error(error.message);
@@ -43,7 +44,7 @@ export default function LoginOrCreateAccountPage() {
       name: email.split("@")[0],
       email: email,
       password: password,
-      callbackURL: "/dashboard/",
+      callbackURL: param.get("callbackURL") || "/~/",
     });
     if (error) {
       if (error.code == "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL") {
