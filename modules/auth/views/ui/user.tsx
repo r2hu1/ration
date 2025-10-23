@@ -22,6 +22,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { DialogTitle } from "@/components/ui/dialog";
+import CreateTeam from "@/modules/dashboard/views/ui/create-team";
 
 export default function User() {
   const { data } = useAuthState();
@@ -64,10 +65,15 @@ export default function User() {
         <SlotItem asChild>
           <Link href="/account">Account Settings</Link>
         </SlotItem>
-        <SlotItem className="flex items-center justify-between">
-          Create Team
-          <UserPlus className="size-4" />
-        </SlotItem>
+        <CreateTeam>
+          <SlotItem
+            onSelect={(e) => e.preventDefault()}
+            className="flex items-center justify-between"
+          >
+            Create Team
+            <UserPlus className="size-4" />
+          </SlotItem>
+        </CreateTeam>
         <SlotSeparator className="hidden sm:flex" />
         <SlotItem className="flex items-center justify-between">
           Toggle Theme

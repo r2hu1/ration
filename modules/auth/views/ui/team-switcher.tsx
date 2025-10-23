@@ -10,6 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import CreateTeam from "@/modules/dashboard/views/ui/create-team";
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import { Plus, Users } from "lucide-react";
 import { useState } from "react";
@@ -18,7 +19,7 @@ export default function TeamSwitcher() {
   const [position, setPosition] = useState("default");
   const { data } = useAuthState();
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button variant="secondary" className="bg-secondary/50" size="sm">
           {" "}
@@ -36,10 +37,15 @@ export default function TeamSwitcher() {
           </DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="p-0 border-0 outline-0">
-          <Button variant="ghost" className="w-full" size="sm">
-            Create Team <Plus className="size-4 ml-auto" />
-          </Button>
+        <DropdownMenuItem
+          onSelect={(e) => e.preventDefault()}
+          className="p-0 border-0 outline-0"
+        >
+          <CreateTeam>
+            <Button variant="ghost" className="w-full" size="sm">
+              Create Team <Plus className="size-4 ml-auto" />
+            </Button>
+          </CreateTeam>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
