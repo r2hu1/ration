@@ -83,7 +83,7 @@ export default function User() {
           </Link>
         </SlotItem>
         <SlotSeparator className="hidden sm:flex" />
-        <SlotItem asChild className="mt-3 sm:mt-0">
+        <SlotItem className="mt-3 sm:mt-0 px-0 py-0">
           <Logout size="sm" className="w-full" />
         </SlotItem>
       </SlotContent>
