@@ -16,7 +16,7 @@ import CreateTeam from "@/modules/dashboard/views/ui/create-team";
 import { useTRPC } from "@/trpc/client";
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import { useQuery } from "@tanstack/react-query";
-import { Plus, Users } from "lucide-react";
+import { ChevronsUpDown, Plus, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -51,10 +51,14 @@ export default function TeamSwitcher() {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <Button variant="secondary" className="bg-secondary/50" size="sm">
-          {" "}
+        <Button
+          variant="secondary"
+          className="bg-secondary/50 sm:min-w-[150px] gap-2"
+          size="sm"
+        >
           {teams?.filter((team) => team.slug === position)?.[0]?.name ||
             data?.user.name}
+          <ChevronsUpDown className="size-3.5 ml-auto" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-[300px] ml-[70px]">
