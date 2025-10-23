@@ -19,12 +19,22 @@ export default function Header() {
           <TeamSwitcher />
         </div>
         <div className="flex items-center gap-2.5">
-          <Button asChild size="icon-sm" variant="outline">
+          <Button
+            asChild
+            size="icon-sm"
+            variant="outline"
+            className="hidden sm:flex"
+          >
             <Link href="https://github.com/r2hu1/ration" target="_blank">
               <Star size="4" />
             </Link>
           </Button>
-          <Button asChild size="sm" variant="outline">
+          <Button
+            asChild
+            size="sm"
+            variant="outline"
+            className="hidden sm:flex"
+          >
             <Link href="https://github.com/r2hu1/ration/issues" target="_blank">
               Feedback
             </Link>

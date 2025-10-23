@@ -61,7 +61,7 @@ export default function TeamSwitcher() {
           <ChevronsUpDown className="size-3.5 ml-auto" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-[300px] ml-[70px]">
+      <DropdownMenuContent className="sm:w-[300px] sm:ml-[70px]">
         <DropdownMenuLabel className="flex items-center">
           Select or create team <Users className="size-4 ml-auto" />
         </DropdownMenuLabel>
@@ -77,7 +77,7 @@ export default function TeamSwitcher() {
               className="grid gap-px"
             >
               {data?.user?.name}
-              <div className="flex items-center justify-between w-full">
+              <div className="flex items-center gap-3 justify-between w-full">
                 <p className="text-xs">Personal Workspace</p>
                 <Badge variant="outline">Owner</Badge>
               </div>
