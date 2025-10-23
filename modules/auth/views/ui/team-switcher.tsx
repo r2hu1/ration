@@ -59,7 +59,7 @@ export default function TeamSwitcher() {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-[300px] ml-[70px]">
         <DropdownMenuLabel className="flex items-center">
-          Select or Create team <Users className="size-4 ml-auto" />
+          Select or create team <Users className="size-4 ml-auto" />
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <ScrollArea>
