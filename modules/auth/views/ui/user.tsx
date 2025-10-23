@@ -59,10 +59,10 @@ export default function User() {
         </div>
         <SlotSeparator className="hidden sm:flex" />
         <SlotItem asChild>
-          <Link href="/">Dashboard</Link>
+          <Link href="/dashboard">Dashboard</Link>
         </SlotItem>
         <SlotItem asChild>
-          <Link href="/">Account Settings</Link>
+          <Link href="/account">Account Settings</Link>
         </SlotItem>
         <SlotItem className="flex items-center justify-between">
           Create Team
