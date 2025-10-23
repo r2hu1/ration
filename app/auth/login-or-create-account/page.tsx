@@ -3,10 +3,11 @@ import { Button } from "@/components/ui/button";
 import { FieldSeparator } from "@/components/ui/field";
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
+import { Loader } from "@/components/ui/loader";
 import { signIn, signUp, useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/modules/landing/views/ui/logo";
-import { Eye, EyeOff, Github, Loader, PenTool } from "lucide-react";
+import { Eye, EyeOff, Github, PenTool } from "lucide-react";
 import { redirect } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { toast } from "sonner";
@@ -143,8 +144,7 @@ export default function LoginOrCreateAccountPage() {
               disabled={loadingManual}
               className={loadingGoogle ? "pointer-events-none select-none" : ""}
             >
-              {loadingManual && <Loader className="h-4! w-4! animate-spin" />}{" "}
-              Continue
+              {loadingManual && <Loader className="size-4" />} Continue
             </Button>
           </form>
         </div>
