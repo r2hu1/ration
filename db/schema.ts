@@ -23,6 +23,8 @@ export const user = pgTable("user", {
   updatedAt: timestamp("updated_at")
     .$defaultFn(() => /* @__PURE__ */ new Date())
     .notNull(),
+  projects: jsonb("projects").notNull().default([]),
+  teams: jsonb("teams").notNull().default([]),
 });
 
 export const session = pgTable("session", {
@@ -61,6 +63,67 @@ export const verification = pgTable("verification", {
   identifier: text("identifier").notNull(),
   value: text("value").notNull(),
   expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").$defaultFn(
+    () => /* @__PURE__ */ new Date(),
+  ),
+  updatedAt: timestamp("updated_at").$defaultFn(
+    () => /* @__PURE__ */ new Date(),
+  ),
+});
+
+export const teams = pgTable("teams", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => uuid()),
+  name: text("name").notNull(),
+  slug: text("slug").notNull().unique(),
+  owner: text("owner")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  members: jsonb("members").notNull().default([]),
+  admins: jsonb("admins").notNull().default([]),
+  guests: jsonb("guests").notNull().default([]),
+  projects: jsonb("projects").notNull().default([]),
+  createdAt: timestamp("created_at").$defaultFn(
+    () => /* @__PURE__ */ new Date(),
+  ),
+  updatedAt: timestamp("updated_at").$defaultFn(
+    () => /* @__PURE__ */ new Date(),
+  ),
+});
+
+export const projects = pgTable("projects", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => uuid()),
+  name: text("name").notNull(),
+  owner: text("owner")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  team_id: text("team_id")
+    .notNull()
+    .references(() => teams.id, { onDelete: "cascade" }),
+  variables: jsonb("variables").notNull().default([]),
+  createdAt: timestamp("created_at").$defaultFn(
+    () => /* @__PURE__ */ new Date(),
+  ),
+  updatedAt: timestamp("updated_at").$defaultFn(
+    () => /* @__PURE__ */ new Date(),
+  ),
+});
+
+export const teamInvites = pgTable("team_invites", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => uuid()),
+  team_id: text("team_id")
+    .notNull()
+    .references(() => teams.id, { onDelete: "cascade" }),
+  invited_by: text("invited_by")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  email: text("email").notNull(),
+  role: text("role").notNull(),
   createdAt: timestamp("created_at").$defaultFn(
     () => /* @__PURE__ */ new Date(),
   ),

@@ -1,6 +1,6 @@
 {
-  "id": "0ab1c6fc-089a-4cdf-9bd7-660cecc4555e",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "78941594-c714-44e0-bf54-af413c771f72",
+  "prevId": "0ab1c6fc-089a-4cdf-9bd7-660cecc4555e",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -434,45 +434,6 @@
           "tableTo": "user",
           "columnsFrom": [
             "owner"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "teams_members_user_id_fk": {
-          "name": "teams_members_user_id_fk",
-          "tableFrom": "teams",
-          "tableTo": "user",
-          "columnsFrom": [
-            "members"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "teams_admins_user_id_fk": {
-          "name": "teams_admins_user_id_fk",
-          "tableFrom": "teams",
-          "tableTo": "user",
-          "columnsFrom": [
-            "admins"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "teams_guests_user_id_fk": {
-          "name": "teams_guests_user_id_fk",
-          "tableFrom": "teams",
-          "tableTo": "user",
-          "columnsFrom": [
-            "guests"
           ],
           "columnsTo": [
             "id"

@@ -23,7 +23,12 @@ import {
 } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Loader } from "@/components/ui/loader";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useTRPC } from "@/trpc/client";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export default function CreateTeam({
   children,
@@ -40,8 +45,35 @@ export default function CreateTeam({
   const SlotFooter = isMobile ? DrawerFooter : AlertDialogFooter;
   const SlotAction = isMobile ? Button : AlertDialogAction;
   const SlotCancel = isMobile ? DrawerClose : AlertDialogCancel;
+
+  const [name, setName] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const trpc = useTRPC();
+  const { mutate, isPending, error, status } = useMutation(
+    trpc.teams.create.mutationOptions(),
+  );
+  const queryClient = useQueryClient();
+
+  const handleTeamCreation = () => {
+    if (status != "idle") return;
+    mutate(
+      { name: name.replace(/\s+/g, "-").toLowerCase() },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries(trpc.teams.get_all.queryOptions());
+        },
+        onSettled: () => {
+          setModalOpen(false);
+        },
+      },
+    );
+  };
+  if (error) {
+    toast.error(error.message);
+  }
   return (
-    <Slot>
+    <Slot open={modalOpen} onOpenChange={setModalOpen}>
       <SlotTrigger asChild>{children}</SlotTrigger>
       <SlotContent>
         <SlotHeader>
@@ -50,14 +82,22 @@ export default function CreateTeam({
             A team can have multiple members and can be used to organize and
             share projects.
           </SlotDescription>
-          <form className="py-2 grid gap-2">
+          <div className="py-2 grid gap-2">
             <Label>Team Name</Label>
-            <Input className="w-full" placeholder="Unique Team" />
-          </form>
+            <Input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full"
+              placeholder="Unique Team"
+            />
+          </div>
         </SlotHeader>
         <SlotFooter className="sm:flex grid grid-cols-2 gap-3">
-          <SlotCancel>Cancel</SlotCancel>
-          <SlotAction>Continue</SlotAction>
+          <SlotCancel disabled={isPending}>Cancel</SlotCancel>
+          <Button disabled={isPending} onClick={handleTeamCreation}>
+            {isPending && <Loader />}
+            Continue
+          </Button>
         </SlotFooter>
       </SlotContent>
     </Slot>
