@@ -20,7 +20,7 @@ export default function TeamSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm">
+        <Button variant="secondary" className="bg-secondary/50" size="sm">
           {" "}
           {data?.user?.name}
         </Button>
