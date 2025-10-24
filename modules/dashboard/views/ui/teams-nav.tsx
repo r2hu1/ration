@@ -59,6 +59,9 @@ export default function TeamsNav() {
     updateIndicator(activeEl);
   }, [active]);
 
+  if (teamId == data?.user?.name?.split(" ").join("-").toLowerCase()) {
+    return <div className="border-b py-[3.5px] mb-8"></div>;
+  }
   return (
     <div className="border-b mb-8 px-6">
       <div
