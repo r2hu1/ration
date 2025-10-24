@@ -51,16 +51,18 @@ export default function TeamSwitcher() {
     setPosition(e);
     router.push(`/~/${e}`);
   };
-
   useEffect(() => {
-    if (!isPending && teams && !position) {
-      const currentTeam = teams.find((team) => team.slug === teamId);
-      setPosition(
-        currentTeam?.slug ||
-          data?.user?.name.split(" ").join("-").toLowerCase(),
-      );
+    if (isPending || !teams) return;
+    const currentTeam = teams.find((team) => team.slug === teamId);
+    if (!position) {
+      if (currentTeam) {
+        setPosition(currentTeam.slug);
+      } else if (!isPending && teams.length > 0) {
+        const fallback = data?.user?.name?.split(" ").join("-").toLowerCase();
+        setPosition(fallback);
+      }
     }
-  }, [teams, teamId, position, data?.session]);
+  }, [isPending, teams, teamId, data?.user?.name]);
 
   return (
     <DropdownMenu modal={false}>
