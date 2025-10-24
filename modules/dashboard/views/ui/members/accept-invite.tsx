@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader } from "@/components/ui/loader";
 import { useTRPC } from "@/trpc/client";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { AlertTriangle } from "lucide-react";
 
@@ -25,6 +25,7 @@ export default function AcceptInvite({ inviteId }: { inviteId: string }) {
   // });
 
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const handleAccept = async () => {
     mutate(
@@ -34,6 +35,7 @@ export default function AcceptInvite({ inviteId }: { inviteId: string }) {
       {
         onSuccess: () => {
           router.push("/~");
+          queryClient.invalidateQueries(trpc.teams.get_all.queryOptions());
         },
       },
     );

@@ -42,9 +42,9 @@ export const teamRouter = createTRPCRouter({
       .where(
         or(
           eq(teams.owner, userId),
-          sql`${teams.admins} @> ${JSON.stringify([userId])}`,
-          sql`${teams.members} @> ${JSON.stringify([userId])}`,
-          sql`${teams.guests} @> ${JSON.stringify([userId])}`,
+          sql`${teams.admins} @> to_jsonb(array[${userId}]::text[])`,
+          sql`${teams.members} @> to_jsonb(array[${userId}]::text[])`,
+          sql`${teams.guests} @> to_jsonb(array[${userId}]::text[])`,
         ),
       );
 
@@ -108,38 +108,47 @@ export const teamRouter = createTRPCRouter({
   get_invite_details: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input, ctx }) => {
+      const userEmail = ctx.auth.user.email.trim().toLowerCase();
+
       const [invite] = await db
         .select()
         .from(teamInvites)
         .where(eq(teamInvites.id, input.id));
 
-      if (!invite) throw new TRPCError({ code: "NOT_FOUND" });
-      if (invite.email != ctx.auth.user.email) {
-        console.log(invite.email, ctx.auth.user.email);
-        throw new TRPCError({ code: "UNAUTHORIZED" });
-      }
+      if (!invite)
+        throw new TRPCError({ code: "NOT_FOUND", message: "Invite not found" });
 
-      const invitedByName = await db
-        .select()
+      if (invite.email.trim().toLowerCase() !== userEmail) {
+        console.log("Unauthorized invite access:", invite.email, userEmail);
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Invite not for this user",
+        });
+      }
+      const inviter = await db
+        .select({ name: user.name })
         .from(user)
         .where(eq(user.id, invite.invited_by))
-        .then((res) => res[0].name);
+        .then((res) => res[0]);
 
+      const invitedByName = inviter?.name ?? "Unknown";
       const [team] = await db
-        .select()
+        .select({
+          id: teams.id,
+          name: teams.name,
+          slug: teams.slug,
+        })
         .from(teams)
         .where(eq(teams.id, invite.team_id));
 
-      if (!team) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!team)
+        throw new TRPCError({ code: "NOT_FOUND", message: "Team not found" });
+
       return {
         email: invite.email,
         role: invite.role,
         invited_by: invitedByName,
-        team: {
-          id: team.id,
-          name: team.name,
-          slug: team.slug,
-        },
+        team,
         invited_on: invite.createdAt,
       };
     }),
