@@ -53,7 +53,7 @@ export default function TeamSwitcher() {
   };
 
   useEffect(() => {
-    if (teams && teams.length > 0 && !position) {
+    if (!isPending && teams && !position) {
       const currentTeam = teams.find((team) => team.slug === teamId);
       setPosition(
         currentTeam?.slug ||
