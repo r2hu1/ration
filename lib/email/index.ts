@@ -1,7 +1,12 @@
 import transporter from "./transporter";
 
 interface SendEmailProps {
-  type: "reset-password" | "verify-email" | "delete-account" | "invite";
+  type:
+    | "reset-password"
+    | "verify-email"
+    | "delete-account"
+    | "invite"
+    | "accept-invite";
   to: string;
   subject: string;
   text: string;
@@ -25,6 +30,9 @@ export async function sendEmail({ type, to, subject, text }: SendEmailProps) {
     <h1>Invite</h1>
     <h2>${text}</h2>
     <p>If you did not request this, please ignore this email.</p>`,
+    "accept-invite": `
+    <h1>Accepted Invite</h1>
+    <h2>${text}</h2>`,
   };
 
   try {

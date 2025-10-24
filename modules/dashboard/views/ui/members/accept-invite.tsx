@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader } from "@/components/ui/loader";
 import { useTRPC } from "@/trpc/client";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { AlertTriangle } from "lucide-react";
 
@@ -14,9 +14,30 @@ export default function AcceptInvite({ inviteId }: { inviteId: string }) {
     trpc.teams.get_invite_details.queryOptions({ id: inviteId }),
   );
 
+  const { mutate, isPending: isPendingAccept } = useMutation(
+    trpc.teams.accept_invite.mutationOptions({}),
+  );
+
+  // const { mutateAsync: rejectInvite } = trpc.teams.reject_invite.useMutation({
+  //   onSuccess: () => {
+  //     router.push("/dashboard");
+  //   },
+  // });
+
   const router = useRouter();
 
-  const handleAccept = async () => {};
+  const handleAccept = async () => {
+    mutate(
+      {
+        id: inviteId,
+      },
+      {
+        onSuccess: () => {
+          router.push("/~");
+        },
+      },
+    );
+  };
 
   const handleReject = async () => {};
 
@@ -72,10 +93,16 @@ export default function AcceptInvite({ inviteId }: { inviteId: string }) {
         </div>
       </div>
       <div className="grid grid-cols-2 mt-8 gap-2">
-        <Button onClick={handleReject} variant="outline">
+        <Button
+          disabled={isPendingAccept}
+          onClick={handleReject}
+          variant="outline"
+        >
           Decline
         </Button>
-        <Button onClick={handleAccept}>Accept</Button>
+        <Button disabled={isPendingAccept} onClick={handleAccept}>
+          {isPendingAccept && <Loader />}Accept
+        </Button>
       </div>
     </div>
   );
