@@ -29,14 +29,14 @@ export default function TeamSettings({ slug }: { slug: string }) {
           </p>
         </div>
         {data?.owner === user?.session?.userId ? (
-          <Button size="sm" asChild>
+          <Button asChild>
             <Link href={`/~/${slug}/danger`}>
               Delete <Trash2 className="size-3.5" />
             </Link>
           </Button>
         ) : (
           <LeaveTeam slug={slug}>
-            <Button size="sm">
+            <Button>
               Leave <LogOut className="size-3.5" />
             </Button>
           </LeaveTeam>
