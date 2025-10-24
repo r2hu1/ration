@@ -43,9 +43,9 @@ export const teamRouter = createTRPCRouter({
       .where(
         or(
           eq(teams.owner, userId),
-          sql`${teams.admins} @> to_jsonb(array[${userId}]::text[])`,
-          sql`${teams.members} @> to_jsonb(array[${userId}]::text[])`,
-          sql`${teams.guests} @> to_jsonb(array[${userId}]::text[])`,
+          sql`(${teams.admins})::jsonb @> ${JSON.stringify([userId])}::jsonb`,
+          sql`(${teams.members})::jsonb @> ${JSON.stringify([userId])}::jsonb`,
+          sql`(${teams.guests})::jsonb @> ${JSON.stringify([userId])}::jsonb`,
         ),
       );
 
