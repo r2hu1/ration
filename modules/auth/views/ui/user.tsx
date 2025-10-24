@@ -37,7 +37,7 @@ export default function User() {
     <Slot modal>
       <SlotTrigger asChild>
         <Avatar>
-          <AvatarFallback>{data?.user?.email}</AvatarFallback>
+          <AvatarFallback>{data?.user?.name.slice(0, 2)}</AvatarFallback>
           <AvatarImage src={data?.user?.image} />
         </Avatar>
       </SlotTrigger>
