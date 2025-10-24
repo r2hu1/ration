@@ -95,6 +95,7 @@ export const teamRouter = createTRPCRouter({
 
       if (!invite) throw new TRPCError({ code: "NOT_FOUND" });
       if (invite.email !== ctx.auth.user.email) {
+        console.log(invite.email, ctx.auth.user.email);
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
