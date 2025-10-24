@@ -48,7 +48,7 @@ export const teamRouter = createTRPCRouter({
           sql`(${teams.guests})::jsonb @> ${JSON.stringify([userId])}::jsonb`,
         ),
       );
-
+    console.log(allTeams);
     return allTeams;
   }),
 
