@@ -119,8 +119,8 @@ export default function InviteMembers({
             </Select>
             <p className="text-xs text-foreground/80">
               {role == "admin" &&
-                "Can view, edit projects, and invite collaborators."}
-              {role == "member" && "Can view and edit projects."}
+                "Can create, view, edit projects, invite collaborators and manage settings."}
+              {role == "member" && "Can create, view, edit projects."}
               {role == "guest" && "Can view projects and members."}
             </p>
           </div>

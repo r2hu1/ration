@@ -65,7 +65,8 @@ export const teamRouter = createTRPCRouter({
         .where(eq(teams.slug, input.teamId));
       const admins = team.admins as any;
       const role = admins.includes(ctx.auth.session.userId);
-      if (!role)
+      const owner = team.owner === ctx.auth.session.userId;
+      if (!role && !owner)
         throw new TRPCError({
           code: "UNAUTHORIZED",
           message: "You can't invite users to this team",
@@ -89,7 +90,17 @@ export const teamRouter = createTRPCRouter({
 
       return invite;
     }),
+  get_by_slug: protectedProcedure
+    .input(z.object({ slug: z.string() }))
+    .query(async ({ input, ctx }) => {
+      const [team] = await db
+        .select()
+        .from(teams)
+        .where(eq(teams.slug, input.slug));
+      if (!team) throw new TRPCError({ code: "NOT_FOUND" });
 
+      return team;
+    }),
   get_invite_details: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input, ctx }) => {
@@ -99,7 +110,7 @@ export const teamRouter = createTRPCRouter({
         .where(eq(teamInvites.id, input.id));
 
       if (!invite) throw new TRPCError({ code: "NOT_FOUND" });
-      if (invite.email !== ctx.auth.user.email) {
+      if (invite.email != ctx.auth.user.email) {
         console.log(invite.email, ctx.auth.user.email);
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
@@ -177,9 +188,9 @@ export const teamRouter = createTRPCRouter({
         .then((res) => res[0].email);
       await sendEmail({
         type: "accept-invite",
-        to: ctx.auth.user.email,
+        to: invitedByEmail,
         subject: "Team Invitation Accepted",
-        text: `${invitedByEmail} has joined the ${team.name}.`,
+        text: `${ctx.auth.user.email} has joined the ${team.name}.`,
       });
 
       return true;
