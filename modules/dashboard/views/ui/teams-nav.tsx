@@ -92,7 +92,7 @@ export default function TeamsNav() {
 
         {indicatorStyle && (
           <div
-            className="absolute bottom-0 h-0.5 bg-primary transition-all duration-300 ease-in-out"
+            className="hidden sm:block absolute bottom-0 h-0.5 bg-primary transition-all duration-300 ease-in-out"
             style={{
               width: indicatorStyle.width,
               left: indicatorStyle.left,
