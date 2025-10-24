@@ -1,4 +1,5 @@
 "use client";
+
 import { useAuthState } from "@/components/providers/auth-context";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -25,11 +26,9 @@ export default function TeamSwitcher() {
   const { data } = useAuthState();
 
   const trpc = useTRPC();
-  const {
-    data: teams,
-    error,
-    isPending,
-  } = useQuery(trpc.teams.get_all.queryOptions());
+  const { data: teams, isPending } = useQuery(
+    trpc.teams.get_all.queryOptions(),
+  );
 
   const evalRole = (userId: string | undefined, team: any) => {
     return team.owner === userId
@@ -45,23 +44,20 @@ export default function TeamSwitcher() {
 
   const path = usePathname();
   const teamId = path.split("/")[2];
-
   const router = useRouter();
-  const handleTeamSwitch = (e: any) => {
-    setPosition(e);
-    router.push(`/~/${e}`);
+
+  const handleTeamSwitch = (slug: string) => {
+    setPosition(slug);
+    router.push(`/~/${slug}`);
   };
+
   useEffect(() => {
-    if (isPending || !teams) return;
-    const currentTeam = teams.find((team) => team.slug === teamId);
-    if (!position) {
-      if (currentTeam) {
-        setPosition(currentTeam.slug);
-      } else if (!isPending && teams.length > 0) {
-        const fallback = data?.user?.name?.split(" ").join("-").toLowerCase();
-        setPosition(fallback);
-      }
-    }
+    if (isPending || !teams?.length) return;
+
+    const currentTeam = teams.find((t) => t.slug === teamId);
+    const fallback = data?.user?.name?.split(" ").join("-").toLowerCase();
+
+    setPosition(currentTeam?.slug || fallback);
   }, [isPending, teams, teamId, data?.user?.name]);
 
   return (
@@ -72,16 +68,17 @@ export default function TeamSwitcher() {
           className="bg-secondary/40 sm:min-w-[150px] gap-2"
           size="sm"
         >
-          {teams?.filter((team) => team.slug === position)?.[0]?.name ||
-            data?.user.name}
+          {teams?.find((t) => t.slug === position)?.name || data?.user?.name}
           <ChevronsUpDown className="size-3.5 ml-auto" />
         </Button>
       </DropdownMenuTrigger>
+
       <DropdownMenuContent className="sm:w-[300px] sm:ml-[70px]">
         <DropdownMenuLabel className="flex items-center">
           Select or create team <Users className="size-4 ml-auto" />
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+
         <ScrollArea>
           <DropdownMenuRadioGroup
             value={position}
@@ -89,7 +86,7 @@ export default function TeamSwitcher() {
             className="max-h-64"
           >
             <DropdownMenuRadioItem
-              value={data?.user?.name.split(" ").join("-").toLowerCase()}
+              value={data?.user?.name?.split(" ").join("-").toLowerCase()}
               className="grid gap-px"
             >
               {data?.user?.name}
@@ -98,6 +95,7 @@ export default function TeamSwitcher() {
                 <Badge variant="outline">Owner</Badge>
               </div>
             </DropdownMenuRadioItem>
+
             {teams?.map((team) => (
               <DropdownMenuRadioItem
                 key={team.id}
@@ -118,7 +116,9 @@ export default function TeamSwitcher() {
           </DropdownMenuRadioGroup>
           <ScrollBar />
         </ScrollArea>
+
         <DropdownMenuSeparator />
+
         <DropdownMenuItem
           onSelect={(e) => e.preventDefault()}
           className="p-0 border-0 outline-0"

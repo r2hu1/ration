@@ -33,6 +33,7 @@ export const teamRouter = createTRPCRouter({
 
       return team;
     }),
+
   get_all: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.auth.session.userId;
 
@@ -50,6 +51,7 @@ export const teamRouter = createTRPCRouter({
 
     return allTeams;
   }),
+
   invite: protectedProcedure
     .input(
       z.object({
@@ -63,18 +65,22 @@ export const teamRouter = createTRPCRouter({
         .select()
         .from(teams)
         .where(eq(teams.slug, input.teamId));
-      const admins = team.admins as any;
-      const role = admins.includes(ctx.auth.session.userId);
-      const owner = team.owner === ctx.auth.session.userId;
-      if (!role && !owner)
+
+      const admins = (team.admins as any) ?? [];
+      const isAdmin = admins.includes(ctx.auth.session.userId);
+      const isOwner = team.owner === ctx.auth.session.userId;
+
+      if (!isAdmin && !isOwner) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
           message: "You can't invite users to this team",
         });
+      }
+
       const invite = await db
         .insert(teamInvites)
         .values({
-          email: input.email,
+          email: input.email.trim().toLowerCase(),
           role: input.role,
           invited_by: ctx.auth.session.userId,
           team_id: team.id,
@@ -85,11 +91,12 @@ export const teamRouter = createTRPCRouter({
         type: "invite",
         to: input.email,
         subject: `You've been invited to join ${team.name}`,
-        text: `You've been invited to join ${team.name} as a ${input.role}. click on this link to accept the invitation ${process.env.BETTER_AUTH_URL}~/invite/${invite[0].id}`,
+        text: `You've been invited to join ${team.name} as a ${input.role}. Click this link to accept: ${process.env.NEXT_PUBLIC_APP_URL}/~/invite/${invite[0].id}`,
       });
 
       return invite;
     }),
+
   get_by_slug: protectedProcedure
     .input(z.object({ slug: z.string() }))
     .query(async ({ input, ctx }) => {
@@ -97,14 +104,26 @@ export const teamRouter = createTRPCRouter({
         .select()
         .from(teams)
         .where(eq(teams.slug, input.slug));
-      if (
-        !team &&
-        input.slug != ctx.auth.user.name.split(" ").join("-").toLowerCase()
-      )
-        throw new TRPCError({ code: "NOT_FOUND" });
 
-      return team || true;
+      if (team) return team;
+
+      const fallbackSlug = ctx.auth.user.name
+        .split(" ")
+        .join("-")
+        .toLowerCase();
+
+      if (input.slug === fallbackSlug) {
+        return {
+          id: null,
+          name: ctx.auth.user.name,
+          slug: fallbackSlug,
+          owner: ctx.auth.user.id,
+        };
+      }
+
+      throw new TRPCError({ code: "NOT_FOUND" });
     }),
+
   get_invite_details: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input, ctx }) => {
@@ -119,12 +138,12 @@ export const teamRouter = createTRPCRouter({
         throw new TRPCError({ code: "NOT_FOUND", message: "Invite not found" });
 
       if (invite.email.trim().toLowerCase() !== userEmail) {
-        console.log("Unauthorized invite access:", invite.email, userEmail);
         throw new TRPCError({
           code: "UNAUTHORIZED",
           message: "Invite not for this user",
         });
       }
+
       const inviter = await db
         .select({ name: user.name })
         .from(user)
@@ -132,6 +151,7 @@ export const teamRouter = createTRPCRouter({
         .then((res) => res[0]);
 
       const invitedByName = inviter?.name ?? "Unknown";
+
       const [team] = await db
         .select({
           id: teams.id,
@@ -152,6 +172,7 @@ export const teamRouter = createTRPCRouter({
         invited_on: invite.createdAt,
       };
     }),
+
   accept_invite: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input, ctx }) => {
@@ -161,8 +182,11 @@ export const teamRouter = createTRPCRouter({
         .where(eq(teamInvites.id, input.id));
 
       if (!invite) throw new TRPCError({ code: "NOT_FOUND" });
-      if (invite.email !== ctx.auth.user.email) {
-        console.log(invite.email, ctx.auth.user.email);
+
+      if (
+        invite.email.trim().toLowerCase() !==
+        ctx.auth.user.email.trim().toLowerCase()
+      ) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
@@ -180,34 +204,43 @@ export const teamRouter = createTRPCRouter({
         .set({
           admins:
             role === "admin"
-              ? [...((team.admins as any) || []), ctx.auth.user.id]
+              ? Array.from(
+                  new Set([...((team.admins as any) || []), ctx.auth.user.id]),
+                )
               : team.admins,
           members:
             role === "member"
-              ? [...((team.members as any) || []), ctx.auth.user.id]
+              ? Array.from(
+                  new Set([...((team.members as any) || []), ctx.auth.user.id]),
+                )
               : team.members,
           guests:
             role === "guest"
-              ? [...((team.guests as any) || []), ctx.auth.user.id]
+              ? Array.from(
+                  new Set([...((team.guests as any) || []), ctx.auth.user.id]),
+                )
               : team.guests,
         })
         .where(eq(teams.id, invite.team_id));
 
       await db.delete(teamInvites).where(eq(teamInvites.id, input.id));
+
       const invitedByEmail = await db
         .select()
         .from(user)
         .where(eq(user.id, invite.invited_by))
         .then((res) => res[0].email);
+
       await sendEmail({
         type: "accept-invite",
         to: invitedByEmail,
         subject: "Team Invitation Accepted",
-        text: `${ctx.auth.user.email} has joined the ${team.name}.`,
+        text: `${ctx.auth.user.email} has joined ${team.name}.`,
       });
 
       return true;
     }),
+
   leave_team: protectedProcedure
     .input(z.object({ slug: z.string() }))
     .mutation(async ({ input, ctx }) => {
@@ -218,15 +251,15 @@ export const teamRouter = createTRPCRouter({
 
       if (!team) throw new TRPCError({ code: "NOT_FOUND" });
 
-      const admin = team.admins as any;
-      const member = team.members as any;
-      const guest = team.guests as any;
+      const admins = (team.admins as any) ?? [];
+      const members = (team.members as any) ?? [];
+      const guests = (team.guests as any) ?? [];
 
-      const role = admin.includes(ctx.auth.user.id)
+      const role = admins.includes(ctx.auth.user.id)
         ? "admin"
-        : member.includes(ctx.auth.user.id)
+        : members.includes(ctx.auth.user.id)
           ? "member"
-          : guest.includes(ctx.auth.user.id)
+          : guests.includes(ctx.auth.user.id)
             ? "guest"
             : null;
 
@@ -235,15 +268,15 @@ export const teamRouter = createTRPCRouter({
         .set({
           admins:
             role === "admin"
-              ? admin.filter((id: any) => id !== ctx.auth.user.id)
+              ? admins.filter((id: any) => id !== ctx.auth.user.id)
               : team.admins,
           members:
             role === "member"
-              ? member.filter((id: any) => id !== ctx.auth.user.id)
+              ? members.filter((id: any) => id !== ctx.auth.user.id)
               : team.members,
           guests:
             role === "guest"
-              ? guest.filter((id: any) => id !== ctx.auth.user.id)
+              ? guests.filter((id: any) => id !== ctx.auth.user.id)
               : team.guests,
         })
         .where(eq(teams.slug, input.slug));
