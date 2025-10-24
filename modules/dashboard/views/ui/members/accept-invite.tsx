@@ -6,6 +6,7 @@ import { Loader } from "@/components/ui/loader";
 import { useTRPC } from "@/trpc/client";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { AlertTriangle } from "lucide-react";
 
 export default function AcceptInvite({ inviteId }: { inviteId: string }) {
   const trpc = useTRPC();
@@ -14,12 +15,6 @@ export default function AcceptInvite({ inviteId }: { inviteId: string }) {
   );
 
   const router = useRouter();
-
-  useEffect(() => {
-    if (!isPending && error) {
-      router.push("/~");
-    }
-  }, [isPending, error, router]);
 
   const handleAccept = async () => {};
 
@@ -35,7 +30,14 @@ export default function AcceptInvite({ inviteId }: { inviteId: string }) {
   }
 
   if (!isPending && error) {
-    return null;
+    return (
+      <div className="flex items-center justify-center gap-3 max-w-md w-full border bg-background p-6">
+        <AlertTriangle className="size-4" />
+        <h1 className="text-sm text-foreground/80">
+          This invite is not for you!
+        </h1>
+      </div>
+    );
   }
 
   return (
