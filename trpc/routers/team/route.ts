@@ -208,4 +208,46 @@ export const teamRouter = createTRPCRouter({
 
       return true;
     }),
+  leave_team: protectedProcedure
+    .input(z.object({ slug: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const [team] = await db
+        .select()
+        .from(teams)
+        .where(eq(teams.slug, input.slug));
+
+      if (!team) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const admin = team.admins as any;
+      const member = team.members as any;
+      const guest = team.guests as any;
+
+      const role = admin.includes(ctx.auth.user.id)
+        ? "admin"
+        : member.includes(ctx.auth.user.id)
+          ? "member"
+          : guest.includes(ctx.auth.user.id)
+            ? "guest"
+            : null;
+
+      await db
+        .update(teams)
+        .set({
+          admins:
+            role === "admin"
+              ? admin.filter((id: any) => id !== ctx.auth.user.id)
+              : team.admins,
+          members:
+            role === "member"
+              ? member.filter((id: any) => id !== ctx.auth.user.id)
+              : team.members,
+          guests:
+            role === "guest"
+              ? guest.filter((id: any) => id !== ctx.auth.user.id)
+              : team.guests,
+        })
+        .where(eq(teams.slug, input.slug));
+
+      return true;
+    }),
 });

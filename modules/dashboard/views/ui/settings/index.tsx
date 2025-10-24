@@ -2,6 +2,7 @@
 
 import { useAuthState } from "@/components/providers/auth-context";
 import { Button } from "@/components/ui/button";
+import LeaveTeam from "@/modules/auth/views/ui/leave-team";
 import { useTRPC } from "@/trpc/client";
 import { useQuery } from "@tanstack/react-query";
 import { LogOut, Trash2 } from "lucide-react";
@@ -34,9 +35,11 @@ export default function TeamSettings({ slug }: { slug: string }) {
             </Link>
           </Button>
         ) : (
-          <Button size="sm">
-            Leave <LogOut className="size-3.5" />
-          </Button>
+          <LeaveTeam slug={slug}>
+            <Button size="sm">
+              Leave <LogOut className="size-3.5" />
+            </Button>
+          </LeaveTeam>
         )}
       </div>
     </div>
