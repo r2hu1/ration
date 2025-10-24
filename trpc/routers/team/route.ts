@@ -97,9 +97,13 @@ export const teamRouter = createTRPCRouter({
         .select()
         .from(teams)
         .where(eq(teams.slug, input.slug));
-      if (!team) throw new TRPCError({ code: "NOT_FOUND" });
+      if (
+        !team &&
+        input.slug != ctx.auth.user.name.split(" ").join("-").toLowerCase()
+      )
+        throw new TRPCError({ code: "NOT_FOUND" });
 
-      return team;
+      return team || true;
     }),
   get_invite_details: protectedProcedure
     .input(z.object({ id: z.string() }))
