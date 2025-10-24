@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuthState } from "@/components/providers/auth-context";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -7,6 +8,7 @@ import { useEffect, useState } from "react";
 export default function TeamsNav() {
   const path = usePathname();
   const parts = path.split("/").filter(Boolean);
+  const { data } = useAuthState();
 
   const tildeIndex = parts.indexOf("~");
   const teamId = parts.length > tildeIndex + 1 ? parts[tildeIndex + 1] : "";
@@ -63,24 +65,30 @@ export default function TeamsNav() {
         className="flex space-x-8 sm:overflow-auto overflow-x-scroll relative"
         onMouseLeave={handleLeave}
       >
-        {tabs.map((tab) => {
-          const isActive = active === tab.label;
-          return (
-            <Link
-              key={tab.label}
-              href={tab.href}
-              onMouseEnter={handleHover}
-              data-active={isActive}
-              className={`py-2 px-1 z-10 font-medium text-sm transition-colors ${
-                isActive
-                  ? "text-primary"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {tab.label}
-            </Link>
-          );
-        })}
+        {tabs
+          .filter((tab) =>
+            teamId == data?.user?.name?.split(" ").join("-").toLowerCase()
+              ? tab.label !== "Members"
+              : true,
+          )
+          .map((tab) => {
+            const isActive = active === tab.label;
+            return (
+              <Link
+                key={tab.label}
+                href={tab.href}
+                onMouseEnter={handleHover}
+                data-active={isActive}
+                className={`py-2 px-1 z-10 font-medium text-sm transition-colors ${
+                  isActive
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {tab.label}
+              </Link>
+            );
+          })}
 
         {indicatorStyle && (
           <div
