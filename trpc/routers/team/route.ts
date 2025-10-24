@@ -105,23 +105,12 @@ export const teamRouter = createTRPCRouter({
         .from(teams)
         .where(eq(teams.slug, input.slug));
 
-      if (team) return team;
-
       const fallbackSlug = ctx.auth.user.name
         .split(" ")
         .join("-")
         .toLowerCase();
 
-      if (input.slug === fallbackSlug) {
-        return {
-          id: null,
-          name: ctx.auth.user.name,
-          slug: fallbackSlug,
-          owner: ctx.auth.user.id,
-        };
-      }
-
-      throw new TRPCError({ code: "NOT_FOUND" });
+      return team || fallbackSlug === input.slug;
     }),
 
   get_invite_details: protectedProcedure
