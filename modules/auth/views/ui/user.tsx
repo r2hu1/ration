@@ -23,6 +23,8 @@ import {
 } from "@/components/ui/drawer";
 import { DialogTitle } from "@/components/ui/dialog";
 import CreateTeam from "@/modules/dashboard/views/ui/create-team";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export default function User() {
   const { data } = useAuthState();
@@ -32,6 +34,16 @@ export default function User() {
   const SlotTrigger = isMobile ? DrawerTrigger : DropdownMenuTrigger;
   const SlotItem = isMobile ? "div" : DropdownMenuItem;
   const SlotSeparator = isMobile ? "div" : DropdownMenuSeparator;
+
+  const router = useRouter();
+  const switchDashboard = async () => {
+    const { data, error } = await authClient.organization.setActive({
+      organizationId: null,
+    });
+    if (!error) {
+      router.push("/~/me");
+    }
+  };
 
   return (
     <Slot modal>
@@ -59,19 +71,9 @@ export default function User() {
           </span>
         </div>
         <SlotSeparator className="hidden sm:flex" />
+        <SlotItem onClick={switchDashboard}>Personal Dashboard</SlotItem>
         <SlotItem asChild>
-          <Link
-            href={`/~/${data?.user?.name.split(" ").join("-").toLowerCase()}`}
-          >
-            Dashboard
-          </Link>
-        </SlotItem>
-        <SlotItem asChild>
-          <Link
-            href={`/~/${data?.user?.name.split(" ").join("-").toLowerCase()}/account`}
-          >
-            Account Settings
-          </Link>
+          <Link href={`/~/me/settings`}>Account Settings</Link>
         </SlotItem>
         <CreateTeam>
           <SlotItem

@@ -66,4 +66,11 @@ export const teamRouter = createTRPCRouter({
       console.log(data);
       return data;
     }),
+  get_active_team: protectedProcedure.query(async ({ ctx }) => {
+    const data = await auth.api.getFullOrganization({
+      headers: await headers(),
+    });
+
+    return data;
+  }),
 });

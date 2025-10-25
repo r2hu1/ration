@@ -25,10 +25,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader } from "@/components/ui/loader";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { authClient } from "@/lib/auth-client";
 import { useTRPC } from "@/trpc/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { act, useState } from "react";
 import { toast } from "sonner";
 
 export default function LeaveTeam({
@@ -49,34 +50,31 @@ export default function LeaveTeam({
   const SlotAction = isMobile ? Button : AlertDialogAction;
   const SlotCancel = isMobile ? DrawerClose : AlertDialogCancel;
 
-  const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
   const trpc = useTRPC();
-  const { mutate, isPending, error, status } = useMutation(
-    trpc.teams.leave_team.mutationOptions(),
-  );
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  const handleTeamCreation = () => {
-    mutate(
-      { slug },
-      {
-        onSuccess: () => {
-          setModalOpen(false);
-          queryClient.invalidateQueries(trpc.teams.get_all.queryOptions());
-          router.push("/~");
-        },
-        onSettled: () => {
-          setModalOpen(false);
-        },
-      },
-    );
+  const { data: activeOrganization } = authClient.useActiveOrganization();
+
+  const handleTeamLeave = async () => {
+    setLoading(true);
+    const { data, error } = await authClient.organization.leave({
+      organizationId: activeOrganization?.id,
+    });
+    if (!error) {
+      toast.success("You have successfully left the team.");
+      queryClient.invalidateQueries(trpc.teams.get_all.queryOptions());
+      router.push("/~/me");
+      setModalOpen(false);
+    }
+    if (error) {
+      toast.error(error.message);
+    }
+    setLoading(false);
   };
-  if (error) {
-    toast.error(error.message);
-  }
   return (
     <Slot open={modalOpen} onOpenChange={setModalOpen}>
       <SlotTrigger asChild>{children}</SlotTrigger>
@@ -84,14 +82,14 @@ export default function LeaveTeam({
         <SlotHeader>
           <SlotTitle>Are you sure?</SlotTitle>
           <SlotDescription>
-            You are about to leave the team. Are you sure you want to proceed?
-            This action cannot be undone.
+            You are about to leave {activeOrganization?.name}. Are you sure you
+            want to proceed? This action cannot be undone.
           </SlotDescription>
         </SlotHeader>
         <SlotFooter className="sm:flex grid grid-cols-2 gap-3">
-          <SlotCancel disabled={isPending}>Cancel</SlotCancel>
-          <Button disabled={isPending} onClick={handleTeamCreation}>
-            {isPending && <Loader />}
+          <SlotCancel disabled={loading}>Cancel</SlotCancel>
+          <Button disabled={loading} onClick={handleTeamLeave}>
+            {loading && <Loader />}
             Continue
           </Button>
         </SlotFooter>
