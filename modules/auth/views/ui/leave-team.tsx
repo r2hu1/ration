@@ -62,7 +62,7 @@ export default function LeaveTeam({
   const handleTeamLeave = async () => {
     setLoading(true);
     const { data, error } = await authClient.organization.leave({
-      organizationId: activeOrganization?.id,
+      organizationId: activeOrganization?.id as string,
     });
     if (!error) {
       toast.success("You have successfully left the team.");
