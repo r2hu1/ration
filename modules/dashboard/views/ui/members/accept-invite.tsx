@@ -16,6 +16,7 @@ export default function AcceptInvite({ inviteId }: { inviteId: string }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<any>(null);
   const [isPendingAccept, setIsPendingAccept] = useState(false);
+  const [isPendingReject, setRejectPending] = useState(false);
   const trpc = useTRPC();
   const queryClient = useQueryClient();
 
@@ -35,7 +36,13 @@ export default function AcceptInvite({ inviteId }: { inviteId: string }) {
     setIsPendingAccept(false);
   };
 
-  const handleReject = async () => {};
+  const handleReject = async () => {
+    setRejectPending(true);
+    await authClient.organization.rejectInvitation({
+      invitationId: inviteId,
+    });
+    setRejectPending(false);
+  };
 
   const fetchInvite = async () => {
     setLoading(true);
@@ -104,13 +111,17 @@ export default function AcceptInvite({ inviteId }: { inviteId: string }) {
       </div>
       <div className="grid grid-cols-2 mt-8 gap-2">
         <Button
-          disabled={isPendingAccept}
+          disabled={isPendingAccept || isPendingReject}
           onClick={handleReject}
           variant="outline"
         >
+          {isPendingReject && <Loader />}
           Decline
         </Button>
-        <Button disabled={isPendingAccept} onClick={handleAccept}>
+        <Button
+          disabled={isPendingAccept || isPendingReject}
+          onClick={handleAccept}
+        >
           {isPendingAccept && <Loader />}Accept
         </Button>
       </div>

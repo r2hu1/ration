@@ -11,6 +11,7 @@ import { useTRPC } from "@/trpc/client";
 import { useQuery } from "@tanstack/react-query";
 import { AlertTriangle, Bolt, LogOut, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import KickUser from "./kick";
 
 export default function AllMembers() {
   const trpc = useTRPC();
@@ -22,11 +23,7 @@ export default function AllMembers() {
   );
 
   const getPendingMembers = async () => {
-    const { data, error } = await authClient.organization.listInvitations({
-      query: {
-        organizationId: members?.members[0].organizationId,
-      },
-    });
+    const { data, error } = await authClient.organization.listInvitations({});
     if (!error) {
       setPending(data);
     }
@@ -51,6 +48,13 @@ export default function AllMembers() {
         ))}
       </div>
     );
+
+  const handleCancelInvite = async (id: string) => {
+    await authClient.organization.cancelInvitation({
+      invitationId: id,
+    });
+    getPendingMembers();
+  };
 
   const memberList = members?.members ?? [];
   if (!memberList.length)
@@ -96,10 +100,12 @@ export default function AllMembers() {
                   <span className="hidden sm:flex">Manage</span>
                   <Bolt className="size-3.5" />
                 </Button>
-                <Button size="sm" className="h-8 w-8 sm:w-auto">
-                  <span className="hidden sm:flex">Kick</span>
-                  <LogOut className="size-3.5" />
-                </Button>
+                <KickUser email={member.user.email}>
+                  <Button size="sm" className="h-8 w-8 sm:w-auto">
+                    <span className="hidden sm:flex">Kick</span>
+                    <LogOut className="size-3.5" />
+                  </Button>
+                </KickUser>
               </div>
             )}
         </div>
@@ -122,14 +128,19 @@ export default function AllMembers() {
               </p>
             </div>
           </div>
-          {(role == "admin" || role == "owner") && (
+          {/*{(role == "admin" || role == "owner") && (
             <div className="flex items-center gap-3">
-              <Button variant="outline" size="sm" className="h-8 w-8 sm:w-auto">
+              <Button
+                onClick={() => handleCancelInvite(pending[0].email)}
+                variant="outline"
+                size="sm"
+                className="h-8 w-8 sm:w-auto"
+              >
                 <span className="hidden sm:flex">Cancel</span>
                 <X className="size-3.5" />
               </Button>
             </div>
-          )}
+          )}*/}
         </div>
       )}
     </div>
