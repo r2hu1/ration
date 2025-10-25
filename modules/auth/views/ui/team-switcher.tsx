@@ -38,10 +38,10 @@ export default function TeamSwitcher() {
 
   const handleTeamSwitch = async (slug: string) => {
     if (slug == "me") {
+      setPosition("me");
       const { data, error } = await authClient.organization.setActive({
         organizationId: null,
       });
-      setPosition("me");
       router.push(`/~/me`);
     }
     const { data, error } = await authClient.organization.setActive({
