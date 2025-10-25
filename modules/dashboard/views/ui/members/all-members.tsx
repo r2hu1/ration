@@ -110,7 +110,7 @@ export default function AllMembers() {
             )}
         </div>
       ))}
-      {pending && (
+      {pending && pending[0] && (
         <div className="border bg-background p-4 flex items-center justify-between space-x-4">
           <div className="flex items-center space-x-4">
             <Avatar className="rounded-none h-9 w-9 sm:h-10 sm:w-10">
