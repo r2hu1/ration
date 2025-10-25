@@ -113,7 +113,7 @@ export default function InviteMembers({
                     Member
                   </SelectItem>
                   <SelectItem value="admin">Admin</SelectItem>
-                  <SelectItem value="guest">Guest</SelectItem>
+                  <SelectItem value="owner">Owner</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
