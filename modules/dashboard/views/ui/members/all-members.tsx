@@ -2,6 +2,7 @@
 
 import { useAuthState } from "@/components/providers/auth-context";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Loader } from "@/components/ui/loader";
 import { authClient } from "@/lib/auth-client";
@@ -61,8 +62,9 @@ export default function AllMembers() {
               </AvatarFallback>
             </Avatar>
             <div className="flex flex-col gap-px">
-              <h1 className="text-sm sm:text-base font-medium">
+              <h1 className="text-sm flex items-center gap-2 sm:text-base font-medium">
                 {member.user.name}
+                <Badge variant="secondary">{member.role}</Badge>
               </h1>
               <p className="text-xs sm:text-sm text-foreground/80">
                 {member.user.email}
