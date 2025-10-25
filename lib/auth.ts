@@ -5,6 +5,7 @@ import { sendEmail } from "./email";
 import { user } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { organization } from "better-auth/plugins";
+import { ac, admin, member, owner } from "@/modules/auth/views/ui/permissions";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -63,6 +64,12 @@ export const auth = betterAuth({
   plugins: [
     organization({
       cancelPendingInvitationsOnReInvite: true,
+      ac,
+      roles: {
+        admin,
+        member,
+        owner,
+      },
       organizationHooks: {
         afterCreateOrganization: async ({ organization, member, user }) => {
           await sendEmail({
