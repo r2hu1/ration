@@ -89,21 +89,27 @@ export default function AllMembers() {
             </div>
           </div>
           {user &&
-            (role == "admin" || role == "owner") &&
-            member.userId != user.session.userId &&
-            member.role != "owner" &&
-            member.role != "admin" && (
+            ((role === "owner" && member.userId !== user.session.userId) ||
+              (role === "admin" &&
+                member.userId !== user.session.userId &&
+                !["owner", "admin"].includes(member.role))) && (
               <div className="flex items-center gap-3">
                 <Button
                   size="sm"
                   variant="outline"
                   className="h-8 w-8 sm:w-auto"
+                  aria-label="Manage member"
                 >
                   <span className="hidden sm:flex">Manage</span>
                   <Bolt className="size-3.5" />
                 </Button>
+
                 <KickUser email={member.user.email}>
-                  <Button size="sm" className="h-8 w-8 sm:w-auto">
+                  <Button
+                    size="sm"
+                    className="h-8 w-8 sm:w-auto"
+                    aria-label="Kick member"
+                  >
                     <span className="hidden sm:flex">Kick</span>
                     <LogOut className="size-3.5" />
                   </Button>
