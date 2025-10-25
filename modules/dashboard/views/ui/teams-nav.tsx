@@ -59,7 +59,7 @@ export default function TeamsNav() {
     updateIndicator(activeEl);
   }, [active]);
 
-  if (teamId == "me") {
+  if (teamId == "me" || teamId.length < 20) {
     return <div className="border-b py-[3.5px] mb-8"></div>;
   }
   return (
