@@ -55,6 +55,20 @@ export const teamRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input, ctx }) => {
+      const hasPerms = await auth.api.hasPermission({
+        headers: await headers(),
+        body: {
+          permissions: {
+            organization: ["invite"],
+          },
+        },
+      });
+      if (!hasPerms)
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message:
+            "You do not have permission to invite users to this organization.",
+        });
       const data = await auth.api.createInvitation({
         body: {
           email: input.email,

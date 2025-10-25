@@ -4,7 +4,7 @@ import {
   defaultStatements,
   memberAc,
   ownerAc,
-} from "better-auth/plugins";
+} from "better-auth/plugins/organization/access";
 import { createAccessControl } from "better-auth/plugins/access";
 
 const statement = {
