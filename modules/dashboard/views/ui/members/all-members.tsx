@@ -90,7 +90,9 @@ export default function AllMembers() {
           </div>
           {user &&
             (role == "admin" || role == "owner") &&
-            member.userId != user.session.userId && (
+            member.userId != user.session.userId &&
+            member.role != "owner" &&
+            member.role != "admin" && (
               <div className="flex items-center gap-3">
                 <Button
                   size="sm"
@@ -110,39 +112,42 @@ export default function AllMembers() {
             )}
         </div>
       ))}
-      {pending && pending[0] && (
-        <div className="border bg-background p-4 flex items-center justify-between space-x-4">
-          <div className="flex items-center space-x-4">
-            <Avatar className="rounded-none h-9 w-9 sm:h-10 sm:w-10">
-              <AvatarFallback className="rounded-none">
-                <AlertTriangle className="size-3.5" />
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col gap-px">
-              <h1 className="text-sm flex items-center gap-2 sm:text-base font-medium">
-                Pending Invite
-                <Badge variant="secondary">{pending[0]?.role}</Badge>
-              </h1>
-              <p className="text-xs sm:text-sm text-foreground/80">
-                {pending[0]?.email}
-              </p>
+      {pending &&
+        pending
+          .filter((details: any) => details?.status === "pending")
+          .map((details: any) => (
+            <div className="border bg-background p-4 flex items-center justify-between space-x-4">
+              <div className="flex items-center space-x-4">
+                <Avatar className="rounded-none h-9 w-9 sm:h-10 sm:w-10">
+                  <AvatarFallback className="rounded-none">
+                    <AlertTriangle className="size-3.5" />
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col gap-px">
+                  <h1 className="text-sm flex items-center gap-2 sm:text-base font-medium">
+                    Pending Invite
+                    <Badge variant="secondary">{details?.role}</Badge>
+                  </h1>
+                  <p className="text-xs sm:text-sm text-foreground/80">
+                    {details?.email}
+                  </p>
+                </div>
+              </div>
+              {/*{(role == "admin" || role == "owner") && (
+                  <div className="flex items-center gap-3">
+                    <Button
+                      onClick={() => handleCancelInvite(pending[0].email)}
+                      variant="outline"
+                      size="sm"
+                      className="h-8 w-8 sm:w-auto"
+                    >
+                      <span className="hidden sm:flex">Cancel</span>
+                      <X className="size-3.5" />
+                    </Button>
+                  </div>
+                )}*/}
             </div>
-          </div>
-          {/*{(role == "admin" || role == "owner") && (
-            <div className="flex items-center gap-3">
-              <Button
-                onClick={() => handleCancelInvite(pending[0].email)}
-                variant="outline"
-                size="sm"
-                className="h-8 w-8 sm:w-auto"
-              >
-                <span className="hidden sm:flex">Cancel</span>
-                <X className="size-3.5" />
-              </Button>
-            </div>
-          )}*/}
-        </div>
-      )}
+          ))}
     </div>
   );
 }
