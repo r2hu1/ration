@@ -4,6 +4,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { sendEmail } from "./email";
 import { user } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { organization } from "better-auth/plugins";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -15,10 +16,9 @@ export const auth = betterAuth({
     requireEmailVerification: true,
     sendResetPassword: async ({ user, url }) => {
       await sendEmail({
-        type: "reset-password",
         to: user.email,
         subject: "Ration - Reset your password",
-        text: `Click the link to reset your password: ${url}`,
+        html: `Click the link to reset your password: ${url}`,
       });
     },
     resetPasswordTokenExpiresIn: 3600,
@@ -39,10 +39,9 @@ export const auth = betterAuth({
     sendVerificationEmail: async ({ user, token }) => {
       const verificationUrl = `${process.env.BETTER_AUTH_URL}/api/auth/verify-email?token=${token}&callbackURL=${process.env.BETTER_AUTH_URL}/~/`;
       await sendEmail({
-        type: "verify-email",
         to: user.email,
         subject: "Ration - Verify your email address",
-        text: `Click the link to verify your email: ${verificationUrl}`,
+        html: `Click the link to verify your email: ${verificationUrl}`,
       });
     },
   },
@@ -54,12 +53,94 @@ export const auth = betterAuth({
       },
       sendDeleteAccountVerification: async ({ user, url, token }, request) => {
         await sendEmail({
-          type: "delete-account",
           to: user.email,
           subject: "Ration - Delete your account",
-          text: `Click the link to delete your account: ${url}`,
+          html: `Click the link to delete your account: ${url}`,
         });
       },
     },
   },
+  plugins: [
+    organization({
+      cancelPendingInvitationsOnReInvite: true,
+      organizationHooks: {
+        afterCreateOrganization: async ({ organization, member, user }) => {
+          await sendEmail({
+            to: user.email,
+            subject: `Team ${organization.name} created successfully`,
+            html: `
+            <div style="background-color: #f2f2f2; padding: 20px;text-align: center;color: #333;">
+               <h1>Team ${organization.name} created successfully</h1>
+               <p>Get started by adding members and setting up permissions.</p>
+            </div>
+               `,
+          });
+        },
+        afterAddMember: async ({ member, user, organization }) => {
+          // todo: send in-app notification
+        },
+        afterRemoveMember: async ({ member, user, organization }) => {
+          // todo: send in-app notification
+        },
+        beforeCreateInvitation: async ({
+          invitation,
+          inviter,
+          organization,
+        }) => {
+          const customExpiration = new Date(
+            Date.now() + 1000 * 60 * 60 * 24 * 7,
+          ); // 7 days
+          return {
+            data: {
+              ...invitation,
+              expiresAt: customExpiration,
+            },
+          };
+        },
+        afterCreateInvitation: async ({
+          invitation,
+          inviter,
+          organization,
+        }) => {
+          await sendEmail({
+            to: invitation.email,
+            subject: `You've been invited to join ${organization.name}`,
+            html: `
+                <div style="background-color: #f2f2f2; padding: 20px;text-align: center;color: #333;">
+                   <h1>You've been invited to join ${organization.name}</h1>
+                   <p>You have been invited to join ${organization.name} by ${inviter.name} on ${new Date().toLocaleDateString()}</p>
+                   <p>click on this link to view the invitation</p>
+                   <a href="${process.env.BETTER_AUTH_URL}~/invitation/${invitation.id}">View Invitation</a>
+                </div>
+                `,
+          });
+        },
+        afterAcceptInvitation: async ({
+          invitation,
+          member,
+          user,
+          organization,
+        }) => {
+          // todo: send in-app notification
+        },
+        afterRejectInvitation: async ({ invitation, user, organization }) => {
+          // todo: send in-app notification
+        },
+        beforeCancelInvitation: async ({
+          invitation,
+          cancelledBy,
+          organization,
+        }) => {
+          // todo: send in-app notification
+        },
+        afterCancelInvitation: async ({
+          invitation,
+          cancelledBy,
+          organization,
+        }) => {
+          // todo: send in-app notification
+        },
+      },
+    }),
+  ],
 });

@@ -1,49 +1,61 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader } from "@/components/ui/loader";
-import { useTRPC } from "@/trpc/client";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { AlertTriangle } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { useTRPC } from "@/trpc/client";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function AcceptInvite({ inviteId }: { inviteId: string }) {
-  const trpc = useTRPC();
-  const { data, isPending, error } = useQuery(
-    trpc.teams.get_invite_details.queryOptions({ id: inviteId }),
-  );
-
-  const { mutate, isPending: isPendingAccept } = useMutation(
-    trpc.teams.accept_invite.mutationOptions({}),
-  );
-
-  // const { mutateAsync: rejectInvite } = trpc.teams.reject_invite.useMutation({
-  //   onSuccess: () => {
-  //     router.push("/dashboard");
-  //   },
-  // });
-
   const router = useRouter();
+  const [inviteDetails, setInviteDetails] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<any>(null);
+  const [isPendingAccept, setIsPendingAccept] = useState(false);
+  const trpc = useTRPC();
   const queryClient = useQueryClient();
 
   const handleAccept = async () => {
-    mutate(
-      {
-        id: inviteId,
-      },
-      {
-        onSuccess: () => {
-          router.push("/~");
-          queryClient.invalidateQueries(trpc.teams.get_all.queryOptions());
-        },
-      },
-    );
+    setIsPendingAccept(true);
+    const { data, error } = await authClient.organization.acceptInvitation({
+      invitationId: inviteId,
+    });
+    if (!error) {
+      toast.success("Invitation accepted!");
+      queryClient.invalidateQueries(trpc.teams.get_all.queryOptions());
+      router.push(`/~/${inviteDetails.organizationSlug}`);
+    } else {
+      toast.error("Something went wrong");
+      setError(error);
+    }
+    setIsPendingAccept(false);
   };
 
   const handleReject = async () => {};
 
-  if (isPending) {
+  const fetchInvite = async () => {
+    setLoading(true);
+    const { data, error } = await authClient.organization.getInvitation({
+      query: {
+        id: inviteId,
+      },
+    });
+    if (!error) {
+      setInviteDetails(data);
+    } else {
+      setError(error);
+    }
+    setLoading(false);
+  };
+  useEffect(() => {
+    fetchInvite();
+  }, []);
+
+  if (loading) {
     return (
       <div className="flex items-center justify-center gap-3 max-w-md w-full border bg-background p-6">
         <Loader />
@@ -52,7 +64,7 @@ export default function AcceptInvite({ inviteId }: { inviteId: string }) {
     );
   }
 
-  if (!isPending && error) {
+  if (!loading && error) {
     return (
       <div className="flex items-center justify-center gap-3 max-w-md w-full border bg-background p-6">
         <AlertTriangle className="size-4" />
@@ -68,27 +80,23 @@ export default function AcceptInvite({ inviteId }: { inviteId: string }) {
       <div className="grid gap-1.5">
         <h1 className="text-xl font-bold">Invite Details</h1>
         <p className="text-sm text-foreground/80">
-          <span className="font-bold">{data?.invited_by}</span> has invited you
-          to join their team.
+          {inviteDetails?.inviterEmail} has invited you to join{" "}
+          {inviteDetails?.organizationName}.
         </p>
         <div className="grid gap-2 py-2 mt-4.5">
           <div className="flex flex-wrap items-center justify-between">
-            <h1 className="text-sm">Invited By</h1>
-            <span className="font-bold text-sm">{data?.invited_by}</span>
-          </div>
-          <div className="flex flex-wrap items-center justify-between">
             <h1 className="text-sm">Your Email</h1>
-            <span className="font-bold text-sm">{data?.email}</span>
+            <span className="font-bold text-sm">{inviteDetails?.email}</span>
           </div>
           <div className="flex flex-wrap items-center justify-between">
             <h1 className="text-sm">Joining As</h1>
-            <span className="font-bold text-sm">{data?.role}</span>
+            <span className="font-bold text-sm">{inviteDetails?.role}</span>
           </div>
           <div className="flex flex-wrap items-center justify-between">
-            <h1 className="text-sm">Invited On</h1>
+            <h1 className="text-sm">Expires On</h1>
             <span className="font-bold text-sm">
-              {data?.invited_on
-                ? new Date(data?.invited_on).toDateString()
+              {inviteDetails?.expiresAt
+                ? new Date(inviteDetails?.expiresAt).toDateString()
                 : "N/A"}
             </span>
           </div>

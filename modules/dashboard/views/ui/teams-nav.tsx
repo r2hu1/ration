@@ -59,7 +59,7 @@ export default function TeamsNav() {
     updateIndicator(activeEl);
   }, [active]);
 
-  if (teamId == data?.user?.name?.split(" ").join("-").toLowerCase()) {
+  if (teamId == "me") {
     return <div className="border-b py-[3.5px] mb-8"></div>;
   }
   return (

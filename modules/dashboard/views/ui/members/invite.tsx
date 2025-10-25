@@ -68,7 +68,7 @@ export default function InviteMembers({
 
   const handleTeamInvite = () => {
     mutate(
-      { email: email, teamId: teamId, role: role },
+      { email: email.trim(), teamId: teamId, role: role },
       {
         onSettled: () => {
           setModalOpen(false);
@@ -119,9 +119,10 @@ export default function InviteMembers({
             </Select>
             <p className="text-xs text-foreground/80">
               {role == "admin" &&
-                "Can create, view, edit projects, invite collaborators and manage settings."}
+                "Can create, view, edit projects, invite collaborators."}
               {role == "member" && "Can create, view, edit projects."}
-              {role == "guest" && "Can view projects and members."}
+              {role == "owner" &&
+                "Full access to all projects, members and this organization."}
             </p>
           </div>
         </SlotHeader>

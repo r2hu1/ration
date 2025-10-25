@@ -6,19 +6,8 @@ import { authClient } from "@/lib/auth-client";
 import { FolderCog, Grid2X2, List, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 
-export default function TeamsToolbar({ teamId }: { teamId: string }) {
+export default function PersonalToolbar() {
   const [viewType, setViewType] = useState<"grid" | "list">("grid");
-  const [role, setRole] = useState<string | null>(null);
-
-  const fetchRole = async () => {
-    const { data, error } = await authClient.organization.getActiveMemberRole();
-    if (!error) {
-      setRole(data.role);
-    }
-  };
-  useEffect(() => {
-    fetchRole();
-  }, []);
 
   return (
     <div>
@@ -44,7 +33,7 @@ export default function TeamsToolbar({ teamId }: { teamId: string }) {
               <List className="size-4" />
             </Button>
           </ButtonGroup>
-          <Button disabled={role == "member"}>
+          <Button>
             Create New <FolderCog className="ml-auto size-4" />
           </Button>
         </div>

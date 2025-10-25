@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuthState } from "@/components/providers/auth-context";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { authClient } from "@/lib/auth-client";
 import CreateTeam from "@/modules/dashboard/views/ui/create-team";
 import { useTRPC } from "@/trpc/client";
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
@@ -30,35 +32,32 @@ export default function TeamSwitcher() {
     trpc.teams.get_all.queryOptions(),
   );
 
-  const evalRole = (userId: string | undefined, team: any) => {
-    return team.owner === userId
-      ? "Owner"
-      : team.admins?.includes(userId)
-        ? "Admin"
-        : team.members?.includes(userId)
-          ? "Member"
-          : team.guests?.includes(userId)
-            ? "Guest"
-            : "Unknown";
-  };
-
   const path = usePathname();
   const teamId = path.split("/")[2];
   const router = useRouter();
 
-  const handleTeamSwitch = (slug: string) => {
+  const handleTeamSwitch = async (slug: string) => {
+    if (slug == "me") {
+      const { data, error } = await authClient.organization.setActive({
+        organizationId: null,
+      });
+      setPosition("me");
+      router.push(`/~/me`);
+    }
+    const { data, error } = await authClient.organization.setActive({
+      organizationSlug: slug,
+    });
     setPosition(slug);
     router.push(`/~/${slug}`);
   };
 
+  const { data: activeOrganization } = authClient.useActiveOrganization();
   useEffect(() => {
-    if (isPending || !teams?.length) return;
-
-    const currentTeam = teams.find((t) => t.slug === teamId);
-    const fallback = data?.user?.name?.split(" ").join("-").toLowerCase();
-
-    setPosition(currentTeam?.slug || fallback);
-  }, [isPending, teams, teamId, data?.user?.name]);
+    const filterByName = teams?.filter(
+      (t) => t.name === activeOrganization?.name,
+    )[0] as any;
+    setPosition(filterByName?.slug ? filterByName.slug : "me");
+  }, [activeOrganization]);
 
   return (
     <DropdownMenu modal={false}>
@@ -68,7 +67,7 @@ export default function TeamSwitcher() {
           className="bg-secondary/40 sm:min-w-[150px] gap-2"
           size="sm"
         >
-          {teams?.find((t) => t.slug === position)?.name || data?.user?.name}
+          {activeOrganization?.name || data?.user?.name}
           <ChevronsUpDown className="size-3.5 ml-auto" />
         </Button>
       </DropdownMenuTrigger>
@@ -85,10 +84,7 @@ export default function TeamSwitcher() {
             onValueChange={handleTeamSwitch}
             className="max-h-64"
           >
-            <DropdownMenuRadioItem
-              value={data?.user?.name?.split(" ").join("-").toLowerCase()}
-              className="grid gap-px"
-            >
+            <DropdownMenuRadioItem value="me" className="grid gap-px">
               {data?.user?.name}
               <div className="flex items-center gap-3 justify-between w-full">
                 <p className="text-xs">Personal Workspace</p>
@@ -100,17 +96,15 @@ export default function TeamSwitcher() {
               <DropdownMenuRadioItem
                 key={team.id}
                 value={team.slug}
-                className="grid gap-px"
+                className="grid gap-2"
               >
                 {team.name}
-                <div className="flex items-center justify-between w-full">
-                  <p className="text-xs">
-                    {Object.keys(team?.projects || {}).length} Projects
-                  </p>
-                  <Badge variant="outline">
-                    {evalRole(data?.session?.userId, team)}
-                  </Badge>
-                </div>
+                <p className="text-xs text-foreground/80 flex items-center justify-between">
+                  created on
+                  <span className="text-foreground/60">
+                    {new Date(team.createdAt).toDateString()}
+                  </span>
+                </p>
               </DropdownMenuRadioItem>
             ))}
           </DropdownMenuRadioGroup>

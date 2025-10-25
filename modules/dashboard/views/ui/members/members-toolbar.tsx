@@ -3,27 +3,26 @@ import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 import { FolderCog, Grid2X2, List, Search, UserPlus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import InviteMembers from "./invite";
 import { useTRPC } from "@/trpc/client";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthState } from "@/components/providers/auth-context";
+import { authClient } from "@/lib/auth-client";
 
 export default function MembersToolbar({ teamId }: { teamId: string }) {
   const [viewType, setViewType] = useState<"grid" | "list">("grid");
-  const trpc = useTRPC();
-  const { data: user } = useAuthState();
-  const { data, isPending, error } = useQuery(
-    trpc.teams.get_by_slug.queryOptions({ slug: teamId }),
-  );
+  const [role, setRole] = useState<string | null>(null);
 
-  const notValidAdmin = (): boolean => {
-    const admins = data?.admins as any;
-    const owner = data?.owner;
-    const isAdmin = admins?.includes(user?.session.userId);
-    const isOwner = owner === user?.session.userId;
-    return !isAdmin && !isOwner;
+  const fetchRole = async () => {
+    const { data, error } = await authClient.organization.getActiveMemberRole();
+    if (!error) {
+      setRole(data.role);
+    }
   };
+  useEffect(() => {
+    fetchRole();
+  }, []);
 
   return (
     <div>
@@ -50,7 +49,7 @@ export default function MembersToolbar({ teamId }: { teamId: string }) {
             </Button>
           </ButtonGroup>
           <InviteMembers teamId={teamId}>
-            <Button disabled={notValidAdmin()}>
+            <Button disabled={role == "member"}>
               Invite Someone <UserPlus className="ml-auto size-4" />
             </Button>
           </InviteMembers>
