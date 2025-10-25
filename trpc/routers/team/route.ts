@@ -73,4 +73,13 @@ export const teamRouter = createTRPCRouter({
 
     return data;
   }),
+  get_members_in_active_team: protectedProcedure.query(async ({ ctx }) => {
+    const data = await auth.api.listMembers({
+      query: {
+        sortBy: "createdAt",
+      },
+      headers: await headers(),
+    });
+    return data;
+  }),
 });
