@@ -2,6 +2,7 @@
 
 import { useAuthState } from "@/components/providers/auth-context";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { authClient } from "@/lib/auth-client";
 import LeaveTeam from "@/modules/auth/views/ui/leave-team";
 import { useTRPC } from "@/trpc/client";
@@ -37,12 +38,18 @@ export default function TeamSettings({ slug }: { slug: string }) {
         <div>
           <h1 className="text-lg font-medium">{activeOrganization?.name}</h1>
           <p className="text-sm text-foreground/80">
-            {data == "owner"
-              ? "You created this team"
-              : "You are a member of this team"}
+            {loading ? (
+              <Skeleton className="h-3 w-40" />
+            ) : data == "owner" ? (
+              "You created this team"
+            ) : (
+              "You are a member of this team"
+            )}
           </p>
         </div>
-        {data == "owner" ? (
+        {loading ? (
+          <Skeleton className="h-10 w-28" />
+        ) : data == "owner" ? (
           <Button asChild>
             <Link href={`/~/${slug}/danger`}>
               Delete <Trash2 className="size-3.5" />
