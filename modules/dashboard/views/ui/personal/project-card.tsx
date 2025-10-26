@@ -71,7 +71,7 @@ export default function ProjectCard({
             </TooltipContent>
           </Tooltip>
 
-          <Link href={`~/me/${project.slug}`} className="grid gap-1">
+          <Link href={`/~/me/${project.slug}`} className="grid gap-1">
             <h1 className="text-sm font-medium hover:underline">
               {project.name}
             </h1>
@@ -123,7 +123,7 @@ export default function ProjectCard({
           variant="outline"
           asChild
         >
-          <Link href={`~/me/${project.slug}`}>
+          <Link href={`/~/me/${project.slug}`}>
             Open <Fullscreen className="size-3" />
           </Link>
         </Button>
