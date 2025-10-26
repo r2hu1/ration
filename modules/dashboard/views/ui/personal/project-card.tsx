@@ -15,6 +15,7 @@ import {
   Pickaxe,
   Radio,
 } from "lucide-react";
+import Link from "next/link";
 
 const projectTypes = {
   development: Pickaxe,
@@ -31,6 +32,7 @@ interface Project {
   type: ProjectType;
   envs?: any;
   updatedAt: String;
+  slug: string;
 }
 
 export default function ProjectCard({
@@ -69,8 +71,10 @@ export default function ProjectCard({
             </TooltipContent>
           </Tooltip>
 
-          <div className="grid gap-1">
-            <h1 className="text-sm font-medium">{project.name}</h1>
+          <Link href={`~/me/${project.slug}`} className="grid gap-1">
+            <h1 className="text-sm font-medium hover:underline">
+              {project.name}
+            </h1>
             {project.description ? (
               <p className="text-xs text-foreground/90 line-clamp-2">
                 {project.description}
@@ -80,7 +84,7 @@ export default function ProjectCard({
                 No description
               </p>
             )}
-          </div>
+          </Link>
         </div>
 
         <div
@@ -117,8 +121,11 @@ export default function ProjectCard({
           size="sm"
           className="hidden sm:flex text-xs h-[30px] shadow-none"
           variant="outline"
+          asChild
         >
-          Open <Fullscreen className="size-3" />
+          <Link href={`~/me/${project.slug}`}>
+            Open <Fullscreen className="size-3" />
+          </Link>
         </Button>
       </div>
     </div>
