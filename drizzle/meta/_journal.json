@@ -8,6 +8,34 @@
       "when": 1761373637695,
       "tag": "0000_unique_tigra",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1761499054046,
+      "tag": "0001_damp_scarlet_spider",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1761499081545,
+      "tag": "0002_lovely_baron_strucker",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1761499148430,
+      "tag": "0003_lovely_black_panther",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1761500131391,
+      "tag": "0004_mighty_shooting_star",
+      "breakpoints": true
     }
   ]
 }

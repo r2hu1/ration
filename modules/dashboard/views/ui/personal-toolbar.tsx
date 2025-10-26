@@ -5,9 +5,17 @@ import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 import { authClient } from "@/lib/auth-client";
 import { FolderCog, Grid2X2, List, Search } from "lucide-react";
 import { useEffect, useState } from "react";
+import CreatePersonalProject from "./personal/create-project";
+import { useRouter } from "next/navigation";
 
 export default function PersonalToolbar() {
-  const [viewType, setViewType] = useState<"grid" | "list">("grid");
+  const [viewType, setViewType] = useState<"grid" | "flex">("grid");
+
+  const router = useRouter();
+  const handleViewTypeChange = (type: "grid" | "flex") => {
+    setViewType(type);
+    router.push(`?viewType=${type}`);
+  };
 
   return (
     <div>
@@ -19,23 +27,25 @@ export default function PersonalToolbar() {
         <div className="grid grid-cols-2 sm:flex gap-3">
           <ButtonGroup className="border p-[1.5px]">
             <Button
-              onClick={() => setViewType("grid")}
+              onClick={() => handleViewTypeChange("grid")}
               variant={viewType === "grid" ? "secondary" : "ghost"}
               size="icon-sm"
             >
               <Grid2X2 className="size-4" />
             </Button>
             <Button
-              onClick={() => setViewType("list")}
-              variant={viewType === "list" ? "secondary" : "ghost"}
+              onClick={() => handleViewTypeChange("flex")}
+              variant={viewType === "flex" ? "secondary" : "ghost"}
               size="icon-sm"
             >
               <List className="size-4" />
             </Button>
           </ButtonGroup>
-          <Button>
-            Create New <FolderCog className="ml-auto size-4" />
-          </Button>
+          <CreatePersonalProject>
+            <Button>
+              Create New <FolderCog className="ml-auto size-4" />
+            </Button>
+          </CreatePersonalProject>
         </div>
       </div>
     </div>

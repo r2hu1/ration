@@ -1,4 +1,5 @@
-import { pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, boolean, jsonb } from "drizzle-orm/pg-core";
+import { v4 as uuid } from "uuid";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -94,4 +95,50 @@ export const invitation = pgTable("invitation", {
   inviterId: text("inviter_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
+});
+
+export const personalProject = pgTable("personal_projects", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => uuid().toString()),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  type: text("type", { enum: ["development", "production", "test"] })
+    .notNull()
+    .default("development"),
+  name: text("name").notNull(),
+  description: text("description").notNull().default(""),
+  slug: text("slug").notNull().unique(),
+  envs: jsonb("envs").notNull().default([]),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  createdAt: timestamp("created_at")
+    .defaultNow()
+    .$defaultFn(() => /* @__PURE__ */ new Date()),
+});
+
+export const teamProject = pgTable("team_projects", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => uuid().toString()),
+  teamId: text("team_id")
+    .notNull()
+    .references(() => organization.id, { onDelete: "cascade" }),
+  type: text("type", { enum: ["development", "production", "test"] })
+    .notNull()
+    .default("development"),
+  name: text("name").notNull(),
+  description: text("description").notNull().default(""),
+  slug: text("slug").notNull().unique(),
+  envs: jsonb("envs").notNull().default([]),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  createdAt: timestamp("created_at")
+    .defaultNow()
+    .$defaultFn(() => /* @__PURE__ */ new Date()),
 });
