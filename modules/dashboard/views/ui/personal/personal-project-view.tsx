@@ -90,7 +90,8 @@ export default function PersonalProjectView({
       </div>
 
       <div className="grid gap-3">
-        {!isPending && !project.envs && (
+        {/*@ts-ignore*/}
+        {!isPending && !project.envs.length && (
           <div className="flex mt-5 items-center justify-center border h-[300px] w-full">
             <div className="text-center grid gap-2">
               <AlertTriangle className="size-4 mx-auto" />
