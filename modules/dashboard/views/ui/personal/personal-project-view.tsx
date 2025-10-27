@@ -47,7 +47,7 @@ export default function PersonalProjectView({
             variant="secondary"
             asChild
             size="icon"
-            className="bg-secondary/40"
+            className="dark:bg-secondary/40"
           >
             <Link href="/~/me">
               <ArrowLeft className="size-3.5" />
