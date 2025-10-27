@@ -46,7 +46,8 @@ export default function AllPersonalProjects() {
       </div>
     );
   }
-  if (!isPending && !projects) return <EmptyProject />;
+  //@ts-ignore
+  if (!isPending && !projects.length) return <EmptyProject />;
 
   return (
     <Suspense
