@@ -2,14 +2,32 @@
 
 An encrypted cloud platform for securely storing, syncing, and managing environment variables across all your projects and teams.
 
+## Some Previews
+
+- Landing Page
 ![Screenshot](/public/preview.png)
+
+- Personal Dashboard
+![Screenshot](/public/personal-dashboard.png)
+
+- Teams Dashboard
+![Screenshot](/public/teams-dashboard.png)
+
+- Projects Details Page
+![Screenshot](/public/personal-project-view.png)
+
+- Team Members
+![Screenshot](/public/teams-members.png)
+
 
 ## ✨ Features
 
+- **👥 Collaboration** - Collaborate with team members on environment variables
 - **🔒 Secure Storage** - Enterprise-grade encryption for your sensitive data
 - **🔑 Easy Access** - Simple and intuitive interface for managing environment variables
 - **🛡️ Encrypted** - End-to-end encryption ensures your data stays private
 - **⚡ Fast Sync** - Quick synchronization across all your projects and environments
+- **🌐 Multi-Environment** - Manage environment variables for different environments (e.g., development, staging, production)
 
 ## 🚀 Tech Stack
 
