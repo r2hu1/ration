@@ -2,7 +2,7 @@ import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import z from "zod";
 import { TRPCError } from "@trpc/server";
 import { db } from "@/db/client";
-import { eq, or, sql } from "drizzle-orm";
+import { and, eq, or, sql } from "drizzle-orm";
 import { sendEmail } from "@/lib/email";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
@@ -43,5 +43,82 @@ export const projectRouter = createTRPCRouter({
         .returning();
 
       return createdProject;
+    }),
+  get_by_slug: protectedProcedure
+    .input(z.object({ slug: z.string().min(4).max(100) }))
+    .query(async ({ input, ctx }) => {
+      const userId = ctx.auth.session.userId;
+
+      const [project] = await db
+        .select()
+        .from(personalProject)
+        .where(
+          and(
+            eq(personalProject.userId, userId),
+            eq(personalProject.slug, input.slug),
+          ),
+        );
+
+      if (!project) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Project not found",
+        });
+      }
+
+      return project;
+    }),
+  update_by_slug: protectedProcedure
+    .input(
+      z.object({
+        slug: z.string().max(100),
+        name: z.string().max(100).optional(),
+        description: z.string().max(200).optional(),
+        type: z.enum(["production", "development", "test"]).optional(),
+        envs: z.record(z.string(), z.any()).optional(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const userId = ctx.auth.session.userId;
+
+      const [getProject] = await db
+        .select()
+        .from(personalProject)
+        .where(
+          and(
+            eq(personalProject.userId, userId),
+            eq(personalProject.slug, input.slug),
+          ),
+        );
+
+      if (!getProject) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Project not found",
+        });
+      }
+
+      const mergedEnvs =
+        input.envs !== undefined
+          ? { ...(getProject.envs ?? {}), ...input.envs }
+          : (getProject.envs ?? {});
+
+      const [updatedProject] = await db
+        .update(personalProject)
+        .set({
+          name: input.name ?? getProject.name,
+          description: input.description ?? getProject.description,
+          type: input.type ?? getProject.type,
+          envs: mergedEnvs,
+        })
+        .where(
+          and(
+            eq(personalProject.userId, userId),
+            eq(personalProject.slug, input.slug),
+          ),
+        )
+        .returning();
+
+      return updatedProject;
     }),
 });

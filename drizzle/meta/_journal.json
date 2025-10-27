@@ -36,6 +36,13 @@
       "when": 1761500131391,
       "tag": "0004_mighty_shooting_star",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1761582940124,
+      "tag": "0005_gifted_true_believers",
+      "breakpoints": true
     }
   ]
 }

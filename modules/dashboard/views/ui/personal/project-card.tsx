@@ -73,11 +73,11 @@ export default function ProjectCard({
           </Tooltip>
 
           <Link href={`/~/me/${project.slug}`} className="grid gap-1">
-            <h1 className="text-sm font-medium hover:underline">
+            <h1 className="truncate text-nowrap text-sm font-medium hover:underline">
               {project.name}
             </h1>
             {project.description ? (
-              <p className="text-xs text-foreground/90 line-clamp-2">
+              <p className="truncate text-nowrap text-xs text-foreground/90 line-clamp-2">
                 {project.description}
               </p>
             ) : (
@@ -118,7 +118,9 @@ export default function ProjectCard({
             <p className="text-[11px] text-foreground/80">
               Updated on {new Date(project.updatedAt as any).toDateString()}
             </p>
-            <Badge variant="secondary">{project.type}</Badge>
+            <Badge variant="secondary">
+              {project.type.charAt(0).toUpperCase() + project.type.slice(1)}
+            </Badge>
           </>
         )}
       </div>

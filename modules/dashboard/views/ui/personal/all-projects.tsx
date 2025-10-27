@@ -10,7 +10,7 @@ import ProjectCard from "./project-card";
 import EmptyProject from "../project/empty";
 
 function ProjectsGrid({ projects }: { projects: any[] }) {
-  const [viewType, setViewType] = useState<"flex" | "grid">("flex");
+  const [viewType, setViewType] = useState<"flex" | "grid">("grid");
   const searchParams = useSearchParams();
   const param = searchParams.get("viewType");
 

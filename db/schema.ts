@@ -110,7 +110,7 @@ export const personalProject = pgTable("personal_projects", {
   name: text("name").notNull(),
   description: text("description").notNull().default(""),
   slug: text("slug").notNull().unique(),
-  envs: jsonb("envs").notNull().default([]),
+  envs: jsonb("envs").notNull().default({}),
   updatedAt: timestamp("updated_at")
     .defaultNow()
     .$onUpdate(() => /* @__PURE__ */ new Date())
