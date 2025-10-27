@@ -10,6 +10,7 @@ import PersonalProjectSettings from "./project-settings";
 import ChangeProjectType, { ProjectType } from "./change-type";
 import Link from "next/link";
 import AddEnvs from "./add-envs";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function PersonalProjectView({
   projectSlug,
@@ -24,7 +25,18 @@ export default function PersonalProjectView({
     error,
   } = useQuery(trpc.projects.get_by_slug.queryOptions({ slug: projectSlug }));
 
-  if (isPending) return <div>Loading...</div>;
+  if (isPending)
+    return (
+      <div className="grid gap-3">
+        <div className="flex items-center gap-3 justify-between">
+          <Skeleton className="h-8 w-32" />
+          <Skeleton className="h-8 w-8" />
+        </div>
+        <Skeleton className="h-16 w-full" />
+        <Skeleton className="h-16 w-full" />
+        <Skeleton className="h-[200px] mt-4 w-full" />
+      </div>
+    );
   if (error) return <div>{error.message}</div>;
   if (!isPending && !project) return <div>Project not found</div>;
 
