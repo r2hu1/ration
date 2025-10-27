@@ -6,6 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FileText, Minus, Plus } from "lucide-react";
 import { toast } from "sonner";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTRPC } from "@/trpc/client";
+import { Loader } from "@/components/ui/loader";
 
 interface Env {
   key: string;
@@ -62,6 +65,38 @@ export default function AddEnvs({ projectSlug }: { projectSlug: string }) {
     const text = await file.text();
     parseEnvText(text);
     toast.success("Loaded environment variables from file");
+  };
+
+  const trpc = useTRPC();
+  const { mutate, isPending, error, status } = useMutation(
+    trpc.projects.update_by_slug.mutationOptions(),
+  );
+  const queryClient = useQueryClient();
+
+  const handleSave = async () => {
+    const filtered = envs.filter(
+      (e) => e.key.trim() !== "" && e.value.trim() !== "",
+    );
+    mutate(
+      {
+        slug: projectSlug,
+        envs: Object.fromEntries(
+          filtered.map(({ key, value }) => [key, value]),
+        ),
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries(
+            trpc.projects.get_by_slug.queryOptions({ slug: projectSlug }),
+          );
+          setEnvs([{ key: "", value: "" }]);
+          toast.success("Saved environment variables");
+        },
+        onError: (error) => {
+          toast.error(error.message);
+        },
+      },
+    );
   };
 
   return (
@@ -135,7 +170,10 @@ export default function AddEnvs({ projectSlug }: { projectSlug: string }) {
             or paste the .env contents above
           </p>
         </div>
-        <Button size="sm">Save</Button>
+        <Button size="sm" disabled={isPending} onClick={handleSave}>
+          {isPending && <Loader />}
+          Save
+        </Button>
       </div>
     </div>
   );

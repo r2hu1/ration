@@ -2,15 +2,14 @@
 
 import { Button } from "@/components/ui/button";
 import { useTRPC } from "@/trpc/client";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Bolt, Copy, Download } from "lucide-react";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
 import PersonalProjectSettings from "./project-settings";
 import ChangeProjectType, { ProjectType } from "./change-type";
 import Link from "next/link";
 import AddEnvs from "./add-envs";
 import { Skeleton } from "@/components/ui/skeleton";
+import EnvCard from "./env-card";
 
 export default function PersonalProjectView({
   projectSlug,
@@ -18,7 +17,6 @@ export default function PersonalProjectView({
   projectSlug: string;
 }) {
   const trpc = useTRPC();
-
   const {
     data: project,
     isPending,
@@ -37,8 +35,9 @@ export default function PersonalProjectView({
         <Skeleton className="h-[200px] mt-4 w-full" />
       </div>
     );
+
   if (error) return <div>{error.message}</div>;
-  if (!isPending && !project) return <div>Project not found</div>;
+  if (!project) return <div>Project not found</div>;
 
   return (
     <div className="pb-20">
@@ -85,8 +84,17 @@ export default function PersonalProjectView({
           </PersonalProjectSettings>
         </div>
       </div>
-      <div className="mt-6">
+
+      <div className="my-6">
         <AddEnvs projectSlug={projectSlug} />
+      </div>
+
+      <div className="grid gap-3">
+        {Object.entries(project.envs as Record<string, any>).map(
+          ([key, value]) => (
+            <EnvCard key={key} kkey={key} value={value} />
+          ),
+        )}
       </div>
     </div>
   );
