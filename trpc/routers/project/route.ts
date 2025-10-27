@@ -7,6 +7,7 @@ import { sendEmail } from "@/lib/email";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { personalProject } from "@/db/schema";
+import { decrypt, encrypt } from "@/lib/crypto";
 
 const createProjectSchema = z.object({
   name: z.string().min(4).max(100),
@@ -66,7 +67,19 @@ export const projectRouter = createTRPCRouter({
         });
       }
 
-      return project;
+      const decryptedEnvs: Record<string, string> = {};
+      for (const [key, value] of Object.entries(project.envs ?? {})) {
+        try {
+          decryptedEnvs[key] = await decrypt(String(value));
+        } catch {
+          decryptedEnvs[key] = String(value);
+        }
+      }
+
+      return {
+        ...project,
+        envs: decryptedEnvs,
+      };
     }),
   update_by_slug: protectedProcedure
     .input(
@@ -98,10 +111,17 @@ export const projectRouter = createTRPCRouter({
         });
       }
 
-      const mergedEnvs =
-        input.envs !== undefined
-          ? { ...(getProject.envs ?? {}), ...input.envs }
-          : (getProject.envs ?? {});
+      let mergedEnvs = getProject.envs ?? {};
+
+      if (input.envs) {
+        const encryptedEnvs: Record<string, string> = {};
+        for (const [key, value] of Object.entries(input.envs)) {
+          if (value && value.trim() !== "") {
+            encryptedEnvs[key] = await encrypt(String(value));
+          }
+        }
+        mergedEnvs = { ...mergedEnvs, ...encryptedEnvs };
+      }
 
       const [updatedProject] = await db
         .update(personalProject)
