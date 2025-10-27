@@ -1,5 +1,6 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -111,22 +112,15 @@ export default function ProjectCard({
           </Button>
         </div>
       </div>
-      <div className="flex items-end justify-between">
+      <div className="flex items-end justify-between -mb-2 mt-2">
         {viewType != "flex" && (
-          <p className="text-[11px] text-foreground/80">
-            Updated on {new Date(project.updatedAt as any).toDateString()}
-          </p>
+          <>
+            <p className="text-[11px] text-foreground/80">
+              Updated on {new Date(project.updatedAt as any).toDateString()}
+            </p>
+            <Badge variant="secondary">{project.type}</Badge>
+          </>
         )}
-        <Button
-          size="sm"
-          className="hidden sm:flex text-xs h-[30px] shadow-none"
-          variant="outline"
-          asChild
-        >
-          <Link href={`/~/me/${project.slug}`}>
-            Open <Fullscreen className="size-3" />
-          </Link>
-        </Button>
       </div>
     </div>
   );
