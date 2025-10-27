@@ -59,7 +59,7 @@ export default function AllPersonalProjects() {
         </div>
       }
     >
-      <ProjectsGrid projects={projects} />
+      <ProjectsGrid projects={projects as any} />
     </Suspense>
   );
 }
