@@ -33,7 +33,7 @@ export default function EnvCard({
   return (
     <div
       key={kkey}
-      className="flex sm:flex-nowrap flex-wrap items-center justify-between gap-3 border p-3 pl-5"
+      className="flex bg-background sm:flex-nowrap flex-wrap items-center justify-between gap-3 border p-3 pl-5"
     >
       <h1 className="font-medium text-sm w-full">{kkey}</h1>
       <div className="flex items-center w-full">
