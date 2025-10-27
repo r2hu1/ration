@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, ClipboardEvent, ChangeEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FileText, Minus, Plus } from "lucide-react";
+import { toast } from "sonner";
 
 interface Env {
   key: string;
@@ -14,14 +15,9 @@ interface Env {
 export default function AddEnvs({ projectSlug }: { projectSlug: string }) {
   const [envs, setEnvs] = useState<Env[]>([{ key: "", value: "" }]);
 
-  const handleAdd = () => {
-    setEnvs([...envs, { key: "", value: "" }]);
-  };
-
-  const handleRemove = (index: number) => {
+  const handleAdd = () => setEnvs([...envs, { key: "", value: "" }]);
+  const handleRemove = (index: number) =>
     setEnvs(envs.filter((_, i) => i !== index));
-  };
-
   const handleChange = (
     index: number,
     field: "key" | "value",
@@ -32,9 +28,40 @@ export default function AddEnvs({ projectSlug }: { projectSlug: string }) {
     setEnvs(updated);
   };
 
-  const handleSave = () => {
-    const envObject = Object.fromEntries(envs.map((e) => [e.key, e.value]));
-    console.log("Saving envs for:", projectSlug, envObject);
+  const parseEnvText = (text: string) => {
+    const lines = text.split("\n");
+    const parsed: Env[] = [];
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith("#")) continue;
+      const [key, ...rest] = trimmed.split("=");
+      if (!key) continue;
+      parsed.push({
+        key: key.trim(),
+        value: rest
+          .join("=")
+          .trim()
+          .replace(/^['"]|['"]$/g, ""),
+      });
+    }
+    if (parsed.length) setEnvs(parsed);
+  };
+
+  const handlePaste = (e: ClipboardEvent<HTMLInputElement>) => {
+    const text = e.clipboardData.getData("text");
+    if (text.includes("\n") && text.includes("=")) {
+      e.preventDefault();
+      parseEnvText(text);
+      toast.success("Loaded environment variables from clipboard");
+    }
+  };
+
+  const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const text = await file.text();
+    parseEnvText(text);
+    toast.success("Loaded environment variables from file");
   };
 
   return (
@@ -54,9 +81,10 @@ export default function AddEnvs({ projectSlug }: { projectSlug: string }) {
               </Label>
               <Input
                 id={`key-${index}`}
-                placeholder="DATABASE_URL"
                 value={env.key}
                 onChange={(e) => handleChange(index, "key", e.target.value)}
+                onPaste={index === 0 ? handlePaste : undefined}
+                placeholder="DATABASE_URL"
               />
             </div>
             <div className="w-full grid gap-2">
@@ -68,35 +96,46 @@ export default function AddEnvs({ projectSlug }: { projectSlug: string }) {
               </Label>
               <Input
                 id={`value-${index}`}
-                placeholder="postgresql://user:pass@localhost/db"
                 value={env.value}
                 onChange={(e) => handleChange(index, "value", e.target.value)}
+                onPaste={index === 0 ? handlePaste : undefined}
+                placeholder="postgresql://user:password@localhost/db"
               />
             </div>
           </div>
-
-          <Button
-            size="icon"
-            variant="outline"
-            onClick={() => (index === 0 ? handleAdd() : handleRemove(index))}
-          >
-            {index === 0 ? <Plus /> : <Minus />}
-          </Button>
+          {index === 0 ? (
+            <Button size="icon" variant="outline" onClick={handleAdd}>
+              <Plus />
+            </Button>
+          ) : (
+            <Button
+              size="icon"
+              variant="outline"
+              onClick={() => handleRemove(index)}
+            >
+              <Minus />
+            </Button>
+          )}
         </div>
       ))}
-
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Button size="sm" variant="outline">
-            Import .env <FileText className="size-3.5" />
+          <Button asChild size="sm" variant="outline">
+            <label className="flex items-center gap-2 cursor-pointer">
+              Import .env <FileText className="size-3.5" />
+              <input
+                type="file"
+                accept=".env,.txt"
+                className="hidden"
+                onChange={handleFileUpload}
+              />
+            </label>
           </Button>
           <p className="hidden sm:flex text-xs text-foreground/80">
             or paste the .env contents above
           </p>
         </div>
-        <Button size="sm" onClick={handleSave}>
-          Save
-        </Button>
+        <Button size="sm">Save</Button>
       </div>
     </div>
   );

@@ -41,7 +41,7 @@ export default function PersonalProjectView({
   if (!isPending && !project) return <div>Project not found</div>;
 
   return (
-    <div>
+    <div className="pb-20">
       <div className="mt-6 flex flex-wrap gap-3 sm:gap-0 items-center justify-between">
         <div className="flex items-center gap-3">
           <Button
