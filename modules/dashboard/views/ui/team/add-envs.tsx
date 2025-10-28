@@ -83,6 +83,7 @@ export default function AddEnvs({ projectSlug }: { projectSlug: string }) {
         envs: Object.fromEntries(
           filtered.map(({ key, value }) => [key, value]),
         ),
+        projectType: "TEAM",
       },
       {
         onSuccess: () => {

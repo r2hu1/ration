@@ -160,8 +160,8 @@ export const projectRouter = createTRPCRouter({
   update_by_slug: protectedProcedure
     .input(
       z.object({
-        slug: z.string().max(100),
-        name: z.string().max(100).optional(),
+        slug: z.string(),
+        name: z.string().optional(),
         description: z.string().max(200).optional(),
         projectType: z.enum(["PERSONAL", "TEAM"]).default("PERSONAL"),
         envs: z.record(z.string(), z.any()).optional(),
@@ -170,55 +170,104 @@ export const projectRouter = createTRPCRouter({
     )
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.auth.session.userId;
-      const isPersonal = input.projectType === "PERSONAL";
-      const table = isPersonal ? personalProject : teamProject;
 
-      const whereCondition = isPersonal
-        ? and(
-            eq(personalProject.userId, userId),
-            eq(personalProject.slug, input.slug),
-          )
-        : and(
-            eq(
-              teamProject.teamId,
-              (await auth.api.getFullOrganization({ headers: await headers() }))
-                ?.id as string,
+      if (input.projectType === "PERSONAL") {
+        const [existingProject] = await db
+          .select()
+          .from(personalProject)
+          .where(
+            and(
+              eq(personalProject.userId, userId),
+              eq(personalProject.slug, input.slug),
             ),
-            eq(teamProject.slug, input.slug),
           );
 
-      const [existingProject] = await db
-        .select()
-        .from(table)
-        .where(whereCondition);
-      if (!existingProject)
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Project not found",
-        });
+        if (!existingProject)
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Project not found",
+          });
 
-      let mergedEnvs = existingProject.envs ?? {};
-      if (input.envs) {
-        const encryptedEnvs: Record<string, string> = {};
-        for (const [key, value] of Object.entries(input.envs)) {
-          if (typeof value === "string" && value.trim() !== "") {
-            encryptedEnvs[key] = await encrypt(value);
+        let mergedEnvs = existingProject.envs ?? {};
+        if (input.envs) {
+          const encryptedEnvs: Record<string, string> = {};
+          for (const [key, value] of Object.entries(input.envs)) {
+            if (typeof value === "string" && value.trim() !== "") {
+              encryptedEnvs[key] = await encrypt(value);
+            }
           }
+          mergedEnvs = { ...mergedEnvs, ...encryptedEnvs };
         }
-        mergedEnvs = { ...mergedEnvs, ...encryptedEnvs };
+
+        const [updatedProject] = await db
+          .update(personalProject)
+          .set({
+            name: input.name ?? existingProject.name,
+            description: input.description ?? existingProject.description,
+            type: input.type ?? existingProject.type,
+            envs: mergedEnvs,
+          })
+          .where(
+            and(
+              eq(personalProject.userId, userId),
+              eq(personalProject.slug, input.slug),
+            ),
+          )
+          .returning();
+
+        return updatedProject;
       }
 
-      const [updatedProject] = await db
-        .update(table)
-        .set({
-          name: input.name ?? existingProject.name,
-          description: input.description ?? existingProject.description,
-          type: input.type ?? existingProject.type,
-          envs: mergedEnvs,
-        })
-        .where(whereCondition)
-        .returning();
+      if (input.projectType === "TEAM") {
+        const team = await auth.api.getFullOrganization({
+          headers: await headers(),
+        });
 
-      return updatedProject;
+        const isMember = team?.members.some(
+          (member) => member.userId === ctx.auth.session.userId,
+        );
+
+        if (!isMember) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "You are not a member of this team",
+          });
+        }
+
+        const [existingProject] = await db
+          .select()
+          .from(teamProject)
+          .where(eq(teamProject.slug, input.slug));
+
+        if (!existingProject)
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Project not found",
+          });
+
+        let mergedEnvs = existingProject.envs ?? {};
+        if (input.envs) {
+          const encryptedEnvs: Record<string, string> = {};
+          for (const [key, value] of Object.entries(input.envs)) {
+            if (typeof value === "string" && value.trim() !== "") {
+              encryptedEnvs[key] = await encrypt(value);
+            }
+          }
+          mergedEnvs = { ...mergedEnvs, ...encryptedEnvs };
+        }
+
+        const [updatedProject] = await db
+          .update(teamProject)
+          .set({
+            name: input.name ?? existingProject.name,
+            description: input.description ?? existingProject.description,
+            type: input.type ?? existingProject.type,
+            envs: mergedEnvs,
+          })
+          .where(and(eq(teamProject.slug, input.slug)))
+          .returning();
+
+        return updatedProject;
+      }
     }),
 });
