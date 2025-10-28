@@ -10,6 +10,7 @@ import Link from "next/link";
 import AddEnvs from "./add-envs";
 import { Skeleton } from "@/components/ui/skeleton";
 import EnvCard from "./env-card";
+import { usePathname } from "next/navigation";
 
 export default function TeamProjectView({
   projectSlug,
@@ -27,6 +28,10 @@ export default function TeamProjectView({
       type: "TEAM",
     }),
   );
+
+  const pathname = usePathname();
+
+  const basePath = pathname.split("/").slice(0, 3).join("/");
 
   if (isPending)
     return (
@@ -54,7 +59,7 @@ export default function TeamProjectView({
             size="icon"
             className="dark:bg-secondary/40"
           >
-            <Link href="/~/me">
+            <Link href={basePath}>
               <ArrowLeft className="size-3.5" />
             </Link>
           </Button>

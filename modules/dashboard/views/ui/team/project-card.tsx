@@ -46,7 +46,6 @@ export default function ProjectCard({
   const Icon = projectTypes[project.type] ?? Pickaxe;
   const pathname = usePathname();
 
-  // get base path (e.g. /~/github-projects-Mf6PG-scaz-20251025)
   const basePath = pathname.split("/").slice(0, 3).join("/");
 
   return (
@@ -75,7 +74,6 @@ export default function ProjectCard({
             </TooltipContent>
           </Tooltip>
 
-          {/* ✅ Correct link */}
           <Link href={`${basePath}/${project.slug}`} className="grid gap-1">
             <h1 className="truncate text-nowrap text-sm font-medium hover:underline">
               {project.name}
