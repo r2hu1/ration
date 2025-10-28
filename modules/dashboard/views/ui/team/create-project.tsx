@@ -31,7 +31,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export default function CreatePersonalProject({
+export default function CreateTeamProject({
   children,
 }: {
   children: React.ReactNode;
@@ -62,12 +62,12 @@ export default function CreatePersonalProject({
       {
         name,
         description,
-        type: "PERSONAL",
+        type: "TEAM",
       },
       {
         onSuccess: () => {
           queryClient.invalidateQueries(
-            trpc.projects.get_all.queryOptions({ type: "PERSONAL" }),
+            trpc.projects.get_all.queryOptions({ type: "TEAM" }),
           );
           setModalOpen(false);
           toast.success("Project created successfully");

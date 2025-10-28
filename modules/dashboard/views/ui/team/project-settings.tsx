@@ -30,10 +30,19 @@ import { useTRPC } from "@/trpc/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
+import ChangeProjectType, { ProjectType } from "./change-type";
 
-export default function CreatePersonalProject({
+export default function TeamProjectSettings({
+  slug,
+  prevName,
+  prevDescription,
+  prevType,
   children,
 }: {
+  slug: string;
+  prevName: string;
+  prevDescription: string;
+  prevType: ProjectType;
   children: React.ReactNode;
 }) {
   const isMobile = useIsMobile();
@@ -47,30 +56,37 @@ export default function CreatePersonalProject({
   const SlotAction = isMobile ? Button : AlertDialogAction;
   const SlotCancel = isMobile ? DrawerClose : AlertDialogCancel;
 
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const [name, setName] = useState(prevName);
+  const [description, setDescription] = useState(prevDescription);
+
   const [modalOpen, setModalOpen] = useState(false);
 
   const trpc = useTRPC();
   const { mutate, isPending, error, status } = useMutation(
-    trpc.projects.create_project.mutationOptions(),
+    trpc.projects.update_by_slug.mutationOptions(),
   );
   const queryClient = useQueryClient();
 
-  const handleProjectCreation = () => {
+  const handleTeamCreation = () => {
     mutate(
       {
-        name,
-        description,
-        type: "PERSONAL",
+        slug: slug,
+        name: name,
+        description: description,
+        projectType: "TEAM",
       },
       {
         onSuccess: () => {
           queryClient.invalidateQueries(
-            trpc.projects.get_all.queryOptions({ type: "PERSONAL" }),
+            trpc.projects.get_all.queryOptions({ type: "TEAM" }),
+          );
+          queryClient.invalidateQueries(
+            trpc.projects.get_by_slug.queryOptions({
+              slug: slug,
+              type: "TEAM",
+            }),
           );
           setModalOpen(false);
-          toast.success("Project created successfully");
         },
       },
     );
@@ -83,38 +99,34 @@ export default function CreatePersonalProject({
       <SlotTrigger asChild>{children}</SlotTrigger>
       <SlotContent>
         <SlotHeader>
-          <SlotTitle>Creating Project</SlotTitle>
+          <SlotTitle>{prevName}</SlotTitle>
           <SlotDescription>
-            A project can have multiple variables and can be used to organize,
-            store and share variables.
+            Rename, edit or delete your project.
           </SlotDescription>
-          <div className="py-2 grid gap-2">
-            <Label htmlFor="project-name">Project Name</Label>
+          <div className="py-3 grid gap-3">
+            <Label>Project Name</Label>
             <Input
-              id="project-name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full"
               placeholder="My Cool Project"
             />
-            <Label htmlFor="project-description" className="mt-1.5">
-              Description{" "}
-              <span className="text-xs text-foreground/80">Optional*</span>
-            </Label>
+            <Label>Project Description</Label>
             <Textarea
-              id="project-description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="w-full"
-              placeholder="This project is for, about ..."
+              placeholder="Describe your project"
             />
+            <Label>Project Type</Label>
+            <ChangeProjectType slug={slug} prevType={prevType} />
           </div>
         </SlotHeader>
         <SlotFooter className="sm:flex grid grid-cols-2 gap-3">
           <SlotCancel disabled={isPending}>Cancel</SlotCancel>
-          <Button disabled={isPending} onClick={handleProjectCreation}>
+          <Button disabled={isPending} onClick={handleTeamCreation}>
             {isPending && <Loader />}
-            Continue
+            Save
           </Button>
         </SlotFooter>
       </SlotContent>

@@ -30,11 +30,11 @@ function ProjectsGrid({ projects }: { projects: any[] }) {
   );
 }
 
-export default function AllPersonalProjects() {
+export default function AllTeamProjects() {
   const trpc = useTRPC();
 
   const { data: projects, isPending } = useQuery(
-    trpc.projects.get_all.queryOptions({ type: "PERSONAL" }),
+    trpc.projects.get_all.queryOptions({ type: "TEAM" }),
   );
 
   if (isPending) {

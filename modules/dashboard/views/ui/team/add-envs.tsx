@@ -89,7 +89,7 @@ export default function AddEnvs({ projectSlug }: { projectSlug: string }) {
           queryClient.invalidateQueries(
             trpc.projects.get_by_slug.queryOptions({
               slug: projectSlug,
-              type: "PERSONAL",
+              type: "TEAM",
             }),
           );
           setEnvs([{ key: "", value: "" }]);

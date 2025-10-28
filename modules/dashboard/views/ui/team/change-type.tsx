@@ -39,17 +39,17 @@ export default function ChangeProjectType({
   const handleTypeChange = (value: ProjectType) => {
     setType(value);
     mutate(
-      { slug: slug, type: value, projectType: "PERSONAL" },
+      { slug: slug, type: value, projectType: "TEAM" },
       {
         onSuccess: () => {
           toast.success("Project type updated");
           queryClient.invalidateQueries(
-            trpc.projects.get_all.queryOptions({ type: "PERSONAL" }),
+            trpc.projects.get_all.queryOptions({ type: "TEAM" }),
           );
           queryClient.invalidateQueries(
             trpc.projects.get_by_slug.queryOptions({
               slug: slug,
-              type: "PERSONAL",
+              type: "TEAM",
             }),
           );
         },

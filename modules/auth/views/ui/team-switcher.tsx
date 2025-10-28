@@ -1,7 +1,6 @@
 "use client";
 
 import { useAuthState } from "@/components/providers/auth-context";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,44 +19,46 @@ import { useTRPC } from "@/trpc/client";
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronsUpDown, Plus, Users } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function TeamSwitcher() {
-  const [position, setPosition] = useState("");
-  const { data } = useAuthState();
-
+  const { data: auth } = useAuthState();
   const trpc = useTRPC();
-  const { data: teams, isPending } = useQuery(
-    trpc.teams.get_all.queryOptions(),
-  );
-
-  const path = usePathname();
-  const teamId = path.split("/")[2];
   const router = useRouter();
 
-  const handleTeamSwitch = async (slug: string) => {
-    if (slug == "me") {
-      setPosition("me");
-      const { data, error } = await authClient.organization.setActive({
-        organizationId: null,
-      });
-      router.push(`/~/me`);
-    }
-    const { data, error } = await authClient.organization.setActive({
-      organizationSlug: slug,
-    });
-    setPosition(slug);
-    router.push(`/~/${slug}`);
-  };
+  const { data: teams } = useQuery(trpc.teams.get_all.queryOptions());
+  const { data: activeOrg } = authClient.useActiveOrganization();
 
-  const { data: activeOrganization } = authClient.useActiveOrganization();
+  const [position, setPosition] = useState<string>("");
+
   useEffect(() => {
-    const filterByName = teams?.filter(
-      (t) => t.name === activeOrganization?.name,
-    )[0] as any;
-    setPosition(filterByName?.slug ? filterByName.slug : "me");
-  }, [activeOrganization]);
+    if (!teams) return;
+
+    if (activeOrg) {
+      const found = teams.find((t) => t.name === activeOrg.name);
+      if (found) setPosition(found.slug);
+    } else {
+      setPosition("me");
+    }
+  }, [teams, activeOrg]);
+
+  const handleTeamSwitch = async (slug: string) => {
+    try {
+      if (slug === "me") {
+        setPosition("me");
+        await authClient.organization.setActive({ organizationId: null });
+        router.push(`/~/me`);
+        return;
+      }
+
+      setPosition(slug);
+      await authClient.organization.setActive({ organizationSlug: slug });
+      router.push(`/~/${slug}`);
+    } catch (err) {
+      console.error("Failed to switch team:", err);
+    }
+  };
 
   return (
     <DropdownMenu modal={false}>
@@ -67,7 +68,7 @@ export default function TeamSwitcher() {
           className="bg-secondary/40 sm:min-w-[150px] gap-2"
           size="sm"
         >
-          {activeOrganization?.name || data?.user?.name}
+          {activeOrg?.name || auth?.user?.name}
           <ChevronsUpDown className="size-3.5 ml-auto" />
         </Button>
       </DropdownMenuTrigger>
@@ -85,7 +86,7 @@ export default function TeamSwitcher() {
             className="max-h-64"
           >
             <DropdownMenuRadioItem value="me" className="grid gap-px">
-              {data?.user?.name}
+              {auth?.user?.name}
               <div className="flex items-center gap-3 justify-between w-full">
                 <p className="text-xs">Personal Workspace</p>
                 <Badge variant="outline">Owner</Badge>
@@ -100,7 +101,7 @@ export default function TeamSwitcher() {
               >
                 {team.name}
                 <p className="text-xs text-foreground/80 flex items-center justify-between">
-                  created on
+                  created on{" "}
                   <span className="text-foreground/60">
                     {new Date(team.createdAt).toDateString()}
                   </span>

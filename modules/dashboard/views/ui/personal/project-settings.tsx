@@ -69,12 +69,22 @@ export default function PersonalProjectSettings({
 
   const handleTeamCreation = () => {
     mutate(
-      { slug: slug, name: name, description: description },
+      {
+        slug: slug,
+        name: name,
+        description: description,
+        projectType: "PERSONAL",
+      },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries(trpc.projects.get_all.queryOptions());
           queryClient.invalidateQueries(
-            trpc.projects.get_by_slug.queryOptions({ slug: slug }),
+            trpc.projects.get_all.queryOptions({ type: "PERSONAL" }),
+          );
+          queryClient.invalidateQueries(
+            trpc.projects.get_by_slug.queryOptions({
+              slug: slug,
+              type: "PERSONAL",
+            }),
           );
           setModalOpen(false);
         },

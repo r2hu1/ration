@@ -5,6 +5,7 @@ import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 import { authClient } from "@/lib/auth-client";
 import { FolderCog, Grid2X2, List, Search } from "lucide-react";
 import { useEffect, useState } from "react";
+import CreateTeamProject from "./team/create-project";
 
 export default function TeamsToolbar({ teamId }: { teamId: string }) {
   const [viewType, setViewType] = useState<"grid" | "list">("grid");
@@ -44,9 +45,11 @@ export default function TeamsToolbar({ teamId }: { teamId: string }) {
               <List className="size-4" />
             </Button>
           </ButtonGroup>
-          <Button disabled={role == "member"}>
-            Create New <FolderCog className="ml-auto size-4" />
-          </Button>
+          <CreateTeamProject>
+            <Button>
+              Create New <FolderCog className="ml-auto size-4" />
+            </Button>
+          </CreateTeamProject>
         </div>
       </div>
     </div>

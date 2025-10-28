@@ -4,14 +4,14 @@ import { Button } from "@/components/ui/button";
 import { useTRPC } from "@/trpc/client";
 import { useQuery } from "@tanstack/react-query";
 import { AlertTriangle, ArrowLeft, Bolt, Copy, Download } from "lucide-react";
-import PersonalProjectSettings from "./project-settings";
+import TeamProjectSettings from "./project-settings";
 import ChangeProjectType, { ProjectType } from "./change-type";
 import Link from "next/link";
 import AddEnvs from "./add-envs";
 import { Skeleton } from "@/components/ui/skeleton";
 import EnvCard from "./env-card";
 
-export default function PersonalProjectView({
+export default function TeamProjectView({
   projectSlug,
 }: {
   projectSlug: string;
@@ -24,7 +24,7 @@ export default function PersonalProjectView({
   } = useQuery(
     trpc.projects.get_by_slug.queryOptions({
       slug: projectSlug,
-      type: "PERSONAL",
+      type: "TEAM",
     }),
   );
 
@@ -77,7 +77,7 @@ export default function PersonalProjectView({
           <Button size="icon-sm" variant="outline">
             <Copy className="size-3" />
           </Button>
-          <PersonalProjectSettings
+          <TeamProjectSettings
             slug={projectSlug}
             prevName={project.name}
             prevDescription={project.description}
@@ -86,7 +86,7 @@ export default function PersonalProjectView({
             <Button size="icon-sm">
               <Bolt className="size-3" />
             </Button>
-          </PersonalProjectSettings>
+          </TeamProjectSettings>
         </div>
       </div>
 
