@@ -6,7 +6,7 @@ import { useTRPC } from "@/trpc/client";
 import { useQuery } from "@tanstack/react-query";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
-import ProjectCard from "./project-card";
+import PersonalProjectCard from "./project-card";
 import EmptyProject from "../project/empty";
 
 function ProjectsGrid({ projects }: { projects: any[] }) {
@@ -24,7 +24,11 @@ function ProjectsGrid({ projects }: { projects: any[] }) {
   return (
     <div className={cn("grid", viewType === "flex" ? flexView : gridView)}>
       {projects.map((project) => (
-        <ProjectCard viewType={viewType} project={project} key={project.id} />
+        <PersonalProjectCard
+          viewType={viewType}
+          project={project}
+          key={project.id}
+        />
       ))}
     </div>
   );

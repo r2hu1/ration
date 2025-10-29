@@ -15,13 +15,17 @@ import { toast } from "sonner";
 
 export type ProjectType = "development" | "production" | "test";
 
+interface ChangeProjectTypeProps {
+  slug: string;
+  prevType: string;
+  projectType: "PERSONAL" | "TEAM";
+}
+
 export default function ChangeProjectType({
   slug,
   prevType,
-}: {
-  prevType: string;
-  slug: string;
-}) {
+  projectType,
+}: ChangeProjectTypeProps) {
   const trpc = useTRPC();
   const { mutate, isPending: typePending } = useMutation(
     trpc.projects.update_by_slug.mutationOptions(),
@@ -39,17 +43,17 @@ export default function ChangeProjectType({
   const handleTypeChange = (value: ProjectType) => {
     setType(value);
     mutate(
-      { slug: slug, type: value, projectType: "PERSONAL" },
+      { slug: slug, type: value, projectType },
       {
         onSuccess: () => {
           toast.success("Project type updated");
           queryClient.invalidateQueries(
-            trpc.projects.get_all.queryOptions({ type: "PERSONAL" }),
+            trpc.projects.get_all.queryOptions({ type: projectType }),
           );
           queryClient.invalidateQueries(
             trpc.projects.get_by_slug.queryOptions({
               slug: slug,
-              type: "PERSONAL",
+              type: projectType,
             }),
           );
         },

@@ -122,7 +122,10 @@ export default function AllMembers() {
         pending
           .filter((details: any) => details?.status === "pending")
           .map((details: any) => (
-            <div className="border bg-background p-4 flex items-center justify-between space-x-4">
+            <div
+              key={details?.email}
+              className="border bg-background p-4 flex items-center justify-between space-x-4"
+            >
               <div className="flex items-center space-x-4">
                 <Avatar className="rounded-none h-9 w-9 sm:h-10 sm:w-10">
                   <AvatarFallback className="rounded-none">
