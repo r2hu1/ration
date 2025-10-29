@@ -12,6 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import EnvCard from "./env-card";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
+import { toast } from "sonner";
 
 interface ProjectViewProps {
   projectSlug: string;
@@ -42,13 +43,34 @@ export default function ProjectView({
     refetch();
   }, [pathname]);
 
-  // Auto-generate back path if not provided
   const defaultBackPath =
     projectType === "PERSONAL"
       ? "/~/me"
       : pathname.split("/").slice(0, 3).join("/");
 
   const actualBackPath = backPath || defaultBackPath;
+
+  const handleCopyAll = () => {
+    const formatToString = Object.entries(project?.envs || {})
+      .map(([key, value]) => `${key}="${value}"`)
+      .join("\n");
+    navigator.clipboard.writeText(formatToString);
+    toast.success("Copied to clipboard");
+  };
+
+  const handleDownloadAsEnv = () => {
+    const formatToString = Object.entries(project?.envs || {})
+      .map(([key, value]) => `${key}="${value}"`)
+      .join("\n");
+    const blob = new Blob([formatToString], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${project?.name}.env`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("Saved as .env file");
+  };
 
   if (isPending)
     return (
@@ -94,10 +116,14 @@ export default function ProjectView({
             prevType={project.type as ProjectType}
             projectType={projectType}
           />
-          <Button size="icon-sm" variant="outline">
+          <Button
+            onClick={handleDownloadAsEnv}
+            size="icon-sm"
+            variant="outline"
+          >
             <Download className="size-3" />
           </Button>
-          <Button size="icon-sm" variant="outline">
+          <Button onClick={handleCopyAll} size="icon-sm" variant="outline">
             <Copy className="size-3" />
           </Button>
           <ProjectSettings
