@@ -31,6 +31,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 import ChangeProjectType, { ProjectType } from "./change-type";
+import { usePathname, useRouter } from "next/navigation";
+import { Trash } from "lucide-react";
 
 export default function PersonalProjectSettings({
   slug,
@@ -65,9 +67,16 @@ export default function PersonalProjectSettings({
   const { mutate, isPending, error, status } = useMutation(
     trpc.projects.update_by_slug.mutationOptions(),
   );
+  const {
+    mutate: deleteProject,
+    isPending: isDeleting,
+    error: deleteError,
+    status: deleteStatus,
+  } = useMutation(trpc.projects.delete.mutationOptions());
   const queryClient = useQueryClient();
+  const router = useRouter();
 
-  const handleTeamCreation = () => {
+  const handleProjUpdate = () => {
     mutate(
       {
         slug: slug,
@@ -91,8 +100,31 @@ export default function PersonalProjectSettings({
       },
     );
   };
+  const pathname = usePathname();
+  const handleDelete = () => {
+    deleteProject(
+      {
+        slug: slug,
+        type: "PERSONAL",
+      },
+      {
+        onSuccess: (data) => {
+          queryClient.invalidateQueries(
+            trpc.projects.get_all.queryOptions({ type: "PERSONAL" }),
+          );
+          if (pathname.includes(data.slug)) {
+            router.push("/~");
+          }
+          setModalOpen(false);
+        },
+      },
+    );
+  };
   if (error) {
     toast.error(error.message);
+  }
+  if (deleteError) {
+    toast.error(deleteError.message);
   }
   return (
     <Slot open={modalOpen} onOpenChange={setModalOpen}>
@@ -121,10 +153,23 @@ export default function PersonalProjectSettings({
             <Label>Project Type</Label>
             <ChangeProjectType slug={slug} prevType={prevType} />
           </div>
+          <div className="flex items-center gap-4">
+            <Button
+              onClick={handleDelete}
+              disabled={isPending || isDeleting}
+              className="h-7 px-3! text-xs w-fit"
+            >
+              Delete Project{" "}
+              {isDeleting ? <Loader /> : <Trash className="size-3.5" />}
+            </Button>
+            <Label className="text-xs text-foreground/80">
+              This action cannot be undone*
+            </Label>
+          </div>
         </SlotHeader>
         <SlotFooter className="sm:flex grid grid-cols-2 gap-3">
-          <SlotCancel disabled={isPending}>Cancel</SlotCancel>
-          <Button disabled={isPending} onClick={handleTeamCreation}>
+          <SlotCancel disabled={isPending || isDeleting}>Cancel</SlotCancel>
+          <Button disabled={isPending || isDeleting} onClick={handleProjUpdate}>
             {isPending && <Loader />}
             Save
           </Button>

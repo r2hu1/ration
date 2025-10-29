@@ -17,6 +17,7 @@ import {
   Radio,
 } from "lucide-react";
 import Link from "next/link";
+import PersonalProjectSettings from "./project-settings";
 
 const projectTypes = {
   development: Pickaxe,
@@ -107,9 +108,16 @@ export default function ProjectCard({
             </TooltipTrigger>
             <TooltipContent>Copy to clipboard</TooltipContent>
           </Tooltip>
-          <Button size="icon-sm" variant="ghost">
-            <EllipsisVertical className="size-3.5" />
-          </Button>
+          <PersonalProjectSettings
+            slug={project.slug}
+            prevName={project.name}
+            prevDescription={project.description as string}
+            prevType={project.type}
+          >
+            <Button size="icon-sm" variant="ghost">
+              <EllipsisVertical className="size-3.5" />
+            </Button>
+          </PersonalProjectSettings>
         </div>
       </div>
       <div className="flex items-end justify-between -mb-2 mt-2">

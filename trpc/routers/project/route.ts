@@ -270,4 +270,71 @@ export const projectRouter = createTRPCRouter({
         return updatedProject;
       }
     }),
+  delete: protectedProcedure
+    .input(
+      z.object({
+        slug: z.string(),
+        type: z.enum(["PERSONAL", "TEAM"]).default("PERSONAL"),
+        teamId: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (input.type == "TEAM") {
+        const [existingProject] = await db
+          .select()
+          .from(teamProject)
+          .where(
+            and(
+              eq(teamProject.slug, input.slug),
+              eq(teamProject.teamId, input.teamId as string),
+            ),
+          );
+
+        if (!existingProject)
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Project not found",
+          });
+
+        const [deletedProject] = await db
+          .delete(teamProject)
+          .where(
+            and(
+              eq(teamProject.slug, input.slug),
+              eq(teamProject.teamId, input.teamId as string),
+            ),
+          )
+          .returning();
+
+        return deletedProject;
+      }
+
+      const [existingProject] = await db
+        .select()
+        .from(personalProject)
+        .where(
+          and(
+            eq(personalProject.slug, input.slug),
+            eq(personalProject.userId, ctx.auth.session.userId),
+          ),
+        );
+
+      if (!existingProject)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Project not found",
+        });
+
+      const [deletedProject] = await db
+        .delete(personalProject)
+        .where(
+          and(
+            eq(personalProject.slug, input.slug),
+            eq(personalProject.userId, ctx.auth.session.userId),
+          ),
+        )
+        .returning();
+
+      return deletedProject;
+    }),
 });
