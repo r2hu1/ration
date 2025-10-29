@@ -1,11 +1,12 @@
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import z from "zod";
 import { TRPCError } from "@trpc/server";
-import { db } from "@/db/client";
-import { eq, or, sql } from "drizzle-orm";
 import { sendEmail } from "@/lib/email";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { db } from "@/db/client";
+import { organization } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 const createTeamSchema = z.object({
   name: z.string().min(4).max(100),
@@ -96,4 +97,33 @@ export const teamRouter = createTRPCRouter({
     });
     return data;
   }),
+  delete: protectedProcedure
+    .input(z.object({ teamId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const hasPerms = await auth.api.hasPermission({
+        headers: await headers(),
+        body: {
+          permissions: {
+            organization: ["delete"],
+          },
+        },
+      });
+      if (!hasPerms)
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You do not have permission to delete this organization.",
+        });
+      const [org] = await db
+        .select()
+        .from(organization)
+        .where(eq(organization.slug, input.teamId));
+
+      const data = await auth.api.deleteOrganization({
+        body: {
+          organizationId: org.id,
+        },
+        headers: await headers(),
+      });
+      return data;
+    }),
 });

@@ -71,6 +71,7 @@ export const auth = betterAuth({
         owner,
       },
       organizationHooks: {
+        disableOrganizationDeletion: false,
         afterCreateOrganization: async ({ organization, member, user }) => {
           await sendEmail({
             to: user.email,
