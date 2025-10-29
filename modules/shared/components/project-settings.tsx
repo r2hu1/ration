@@ -125,7 +125,7 @@ export default function ProjectSettings({
         prevType={prevType}
         projectType={projectType}
       />
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 py-2">
         <Button
           onClick={handleDelete}
           disabled={isPending || isDeleting}
