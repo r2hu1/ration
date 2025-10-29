@@ -8,6 +8,11 @@ import { organization } from "better-auth/plugins";
 import { ac, admin, member, owner } from "@/modules/auth/views/ui/permissions";
 
 export const auth = betterAuth({
+  trustedOrigins: [
+    "https://www.ration.cloud",
+    "https://ration.cloud",
+    "https://rration.vercel.app",
+  ],
   database: drizzleAdapter(db, {
     provider: "pg",
   }),
