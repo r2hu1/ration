@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import TeamProjectSettings from "./project-settings";
 
 const projectTypes = {
   development: Pickaxe,
@@ -109,9 +110,16 @@ export default function ProjectCard({
             </TooltipTrigger>
             <TooltipContent>Copy to clipboard</TooltipContent>
           </Tooltip>
-          <Button size="icon-sm" variant="ghost">
-            <EllipsisVertical className="size-3.5" />
-          </Button>
+          <TeamProjectSettings
+            slug={project.slug}
+            prevName={project.name}
+            prevDescription={project.description as string}
+            prevType={project.type}
+          >
+            <Button size="icon-sm" variant="ghost">
+              <EllipsisVertical className="size-3.5" />
+            </Button>
+          </TeamProjectSettings>
         </div>
       </div>
 

@@ -275,18 +275,20 @@ export const projectRouter = createTRPCRouter({
       z.object({
         slug: z.string(),
         type: z.enum(["PERSONAL", "TEAM"]).default("PERSONAL"),
-        teamId: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       if (input.type == "TEAM") {
+        const data = await auth.api.getFullOrganization({
+          headers: await headers(),
+        });
         const [existingProject] = await db
           .select()
           .from(teamProject)
           .where(
             and(
+              eq(teamProject.teamId, data?.id as string),
               eq(teamProject.slug, input.slug),
-              eq(teamProject.teamId, input.teamId as string),
             ),
           );
 
@@ -301,7 +303,7 @@ export const projectRouter = createTRPCRouter({
           .where(
             and(
               eq(teamProject.slug, input.slug),
-              eq(teamProject.teamId, input.teamId as string),
+              eq(teamProject.teamId, data?.id as string),
             ),
           )
           .returning();
