@@ -165,6 +165,7 @@ export const projectRouter = createTRPCRouter({
         description: z.string().max(200).optional(),
         projectType: z.enum(["PERSONAL", "TEAM"]).default("PERSONAL"),
         envs: z.record(z.string(), z.any()).optional(),
+        deleteEnvKeys: z.array(z.string()).optional(),
         type: z.enum(["production", "development", "test"]).optional(),
       }),
     )
@@ -188,7 +189,16 @@ export const projectRouter = createTRPCRouter({
             message: "Project not found",
           });
 
-        let mergedEnvs = existingProject.envs ?? {};
+        let mergedEnvs: Record<string, any> = existingProject.envs ?? {};
+
+        // Handle environment variable deletions
+        if (input.deleteEnvKeys && input.deleteEnvKeys.length > 0) {
+          for (const keyToDelete of input.deleteEnvKeys) {
+            delete mergedEnvs[keyToDelete];
+          }
+        }
+
+        // Handle environment variable additions/updates
         if (input.envs) {
           const encryptedEnvs: Record<string, string> = {};
           for (const [key, value] of Object.entries(input.envs)) {
@@ -245,7 +255,16 @@ export const projectRouter = createTRPCRouter({
             message: "Project not found",
           });
 
-        let mergedEnvs = existingProject.envs ?? {};
+        let mergedEnvs: Record<string, any> = existingProject.envs ?? {};
+
+        // Handle environment variable deletions
+        if (input.deleteEnvKeys && input.deleteEnvKeys.length > 0) {
+          for (const keyToDelete of input.deleteEnvKeys) {
+            delete mergedEnvs[keyToDelete];
+          }
+        }
+
+        // Handle environment variable additions/updates
         if (input.envs) {
           const encryptedEnvs: Record<string, string> = {};
           for (const [key, value] of Object.entries(input.envs)) {

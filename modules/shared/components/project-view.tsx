@@ -161,7 +161,13 @@ export default function ProjectView({
         )}
         {Object.entries(project.envs as Record<string, any>).map(
           ([key, value]) => (
-            <EnvCard key={key} kkey={key} value={value} />
+            <EnvCard
+              key={key}
+              kkey={key}
+              value={value}
+              projectSlug={projectSlug}
+              projectType={projectType}
+            />
           ),
         )}
       </div>

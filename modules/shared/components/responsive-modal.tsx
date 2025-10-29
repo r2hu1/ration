@@ -40,6 +40,7 @@ interface ResponsiveModalProps {
   confirmDisabled?: boolean;
   cancelDisabled?: boolean;
   showDefaultFooter?: boolean;
+  variant?: "default" | "destructive";
 }
 
 export default function ResponsiveModal({
@@ -57,6 +58,7 @@ export default function ResponsiveModal({
   confirmDisabled = false,
   cancelDisabled = false,
   showDefaultFooter = true,
+  variant = "default",
 }: ResponsiveModalProps) {
   const isMobile = useIsMobile();
 
@@ -84,7 +86,13 @@ export default function ResponsiveModal({
                     {cancelText}
                   </Button>
                 </DrawerClose>
-                <Button disabled={confirmDisabled} onClick={onConfirm}>
+                <Button
+                  disabled={confirmDisabled}
+                  onClick={onConfirm}
+                  variant={
+                    variant === "destructive" ? "destructive" : "default"
+                  }
+                >
                   {confirmText}
                 </Button>
               </DrawerFooter>
@@ -111,7 +119,11 @@ export default function ResponsiveModal({
               <AlertDialogCancel disabled={cancelDisabled} onClick={onCancel}>
                 {cancelText}
               </AlertDialogCancel>
-              <Button disabled={confirmDisabled} onClick={onConfirm}>
+              <Button
+                disabled={confirmDisabled}
+                onClick={onConfirm}
+                variant={variant === "destructive" ? "destructive" : "default"}
+              >
                 {confirmText}
               </Button>
             </AlertDialogFooter>
