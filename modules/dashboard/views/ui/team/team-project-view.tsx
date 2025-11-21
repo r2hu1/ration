@@ -23,7 +23,7 @@ export default function TeamProjectView({
         type: "TEAM",
       })
     );
-  }, [projectSlug, qc]);
+  }, [projectSlug]);
 
   return (
     <ProjectView

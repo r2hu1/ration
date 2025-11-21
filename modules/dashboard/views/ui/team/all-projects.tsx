@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTRPC } from "@/trpc/client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import TeamProjectCard from "./project-card";
@@ -34,12 +34,20 @@ function ProjectsGrid({ projects }: { projects: any[] }) {
   );
 }
 
-export default function AllTeamProjects() {
+export default function AllTeamProjects({slug}:{slug:string}) {
   const trpc = useTRPC();
 
   const { data: projects, isPending } = useQuery(
     trpc.projects.get_all.queryOptions({ type: "TEAM" }),
   );
+  const qc = useQueryClient();
+  useEffect(() => {
+    if (slug) {
+      qc.invalidateQueries(
+        trpc.projects.get_all.queryOptions({ type: "TEAM" })
+      );
+    }
+  }, [slug]);
 
   if (isPending) {
     return (

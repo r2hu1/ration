@@ -34,6 +34,8 @@ export default function TeamSwitcher() {
 
   useEffect(() => {
     if (!teams) return;
+    const slugs = teams.map((t) => t.slug);
+    Promise.all(slugs.map((slug) => router.prefetch(`/~/${slug}`)));
 
     if (activeOrg) {
       const found = teams.find((t) => t.name === activeOrg.name);

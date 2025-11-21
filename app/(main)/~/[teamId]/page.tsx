@@ -16,7 +16,7 @@ export default async function TeamDashboard({
         <h1 className="text-sm font-medium">Projects</h1>
       </div>
       <div className="mt-5">
-        <AllTeamProjects />
+        <AllTeamProjects slug={param.teamId}/>
       </div>
     </div>
   );
