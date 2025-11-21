@@ -19,6 +19,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ProjectSettings from "./project-settings";
 import { ProjectType } from "./change-project-type";
+import { toast } from "sonner";
 
 const projectTypes = {
   development: Pickaxe,
@@ -52,13 +53,24 @@ export default function ProjectCard({
   const Icon = projectTypes[project.type] ?? Pickaxe;
   const pathname = usePathname();
 
-  // Auto-generate base path if not provided
   const defaultBasePath =
     projectType === "PERSONAL"
       ? "/~/me"
       : pathname.split("/").slice(0, 3).join("/");
 
   const actualBasePath = basePath || defaultBasePath;
+  const handleCopyAll = () => {
+    try{
+    const formatToString = Object.entries(project?.envs || {})
+      .map(([key, value]) => `${key}="${value}"`)
+      .join("\n");
+    navigator.clipboard.writeText(formatToString);
+    toast.success("Copied to clipboard");
+    }
+    catch(error){
+      toast.error("Failed to copy to clipboard");
+    }
+  };
 
   return (
     <div
@@ -118,7 +130,9 @@ export default function ProjectCard({
           )}
           <Tooltip>
             <TooltipTrigger>
-              <Button size="icon-sm" variant="ghost">
+              <Button size="icon-sm" variant="ghost"
+                onClick={handleCopyAll}
+              >
                 <Copy className="size-3" />
               </Button>
             </TooltipTrigger>

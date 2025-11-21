@@ -12,6 +12,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Trash } from "lucide-react";
 import ResponsiveModal from "./responsive-modal";
 import ChangeProjectType, { ProjectType } from "./change-project-type";
+import DeleteProject from "@/modules/dashboard/views/ui/project/delete-project";
 
 interface ProjectSettingsProps {
   slug: string;
@@ -38,15 +39,7 @@ export default function ProjectSettings({
   const { mutate, isPending, error, status } = useMutation(
     trpc.projects.update_by_slug.mutationOptions(),
   );
-  const {
-    mutate: deleteProject,
-    isPending: isDeleting,
-    error: deleteError,
-    status: deleteStatus,
-  } = useMutation(trpc.projects.delete.mutationOptions());
   const queryClient = useQueryClient();
-  const router = useRouter();
-  const pathname = usePathname();
 
   const handleProjectUpdate = () => {
     mutate(
@@ -74,33 +67,8 @@ export default function ProjectSettings({
     );
   };
 
-  const handleDelete = () => {
-    deleteProject(
-      {
-        slug: slug,
-        type: projectType,
-      },
-      {
-        onSuccess: (data) => {
-          queryClient.invalidateQueries(
-            trpc.projects.get_all.queryOptions({ type: projectType }),
-          );
-          if (pathname.includes(data.slug)) {
-            router.push("/~");
-          }
-          setModalOpen(false);
-          toast.success("Project deleted successfully");
-        },
-      },
-    );
-  };
-
   if (error) {
     toast.error(error.message);
-  }
-
-  if (deleteError) {
-    toast.error(deleteError.message);
   }
 
   const content = (
@@ -126,17 +94,11 @@ export default function ProjectSettings({
         projectType={projectType}
       />
       <div className="flex items-center gap-4 py-2">
-        <Button
-          onClick={handleDelete}
-          disabled={isPending || isDeleting}
-          className="h-7 px-3! text-xs w-fit"
-        >
-          Delete Project{" "}
-          {isDeleting ? <Loader /> : <Trash className="size-3.5" />}
+        <DeleteProject slug={slug} projectType={projectType}>
+        <Button>
+        Delete <Trash className="size-3.5!" />
         </Button>
-        <Label className="text-xs text-foreground/80">
-          This action cannot be undone*
-        </Label>
+        </DeleteProject>
       </div>
     </div>
   );
@@ -156,8 +118,8 @@ export default function ProjectSettings({
       }
       cancelText="Cancel"
       onConfirm={handleProjectUpdate}
-      confirmDisabled={isPending || isDeleting}
-      cancelDisabled={isPending || isDeleting}
+      confirmDisabled={isPending}
+      cancelDisabled={isPending}
     >
       {children}
     </ResponsiveModal>
