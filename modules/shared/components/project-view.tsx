@@ -39,9 +39,6 @@ export default function ProjectView({
   );
 
   const pathname = usePathname();
-  useEffect(() => {
-    refetch();
-  }, [pathname]);
 
   const defaultBackPath =
     projectType === "PERSONAL"
