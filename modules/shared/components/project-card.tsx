@@ -51,7 +51,7 @@ interface Project {
 
 interface ProjectCardProps {
   project: Project;
-  viewType: "grid" | "flex";
+  viewType: "grid" | "list";
   projectType: "PERSONAL" | "TEAM";
   basePath?: string;
 }
@@ -131,10 +131,10 @@ export default function ProjectCard({
         <div
           className={cn(
             "flex items-center gap-1.5",
-            viewType == "flex" ? "mr-2" : "",
+            viewType == "list" ? "mr-2" : "",
           )}
         >
-          {viewType === "flex" && (
+          {viewType === "list" && (
             <p className="text-[11px] hidden sm:flex mr-4 text-foreground/80">
               Updated on {new Date(project.updatedAt).toDateString()}
             </p>
@@ -187,7 +187,7 @@ export default function ProjectCard({
         </div>
       </div>
 
-      {viewType !== "flex" && (
+      {viewType !== "list" && (
         <div className="flex items-end justify-between -mb-2 mt-2">
           <p className="text-[11px] text-foreground/80">
             Updated on {new Date(project.updatedAt).toDateString()}
