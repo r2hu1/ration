@@ -11,12 +11,14 @@ import { cn } from "@/lib/utils";
 import {
   Bolt,
   Copy,
+  Edit,
   EllipsisVertical,
   FlaskConical,
   Pencil,
   Pickaxe,
   Radio,
   Trash,
+  Trash2,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -167,7 +169,7 @@ export default function ProjectCard({
                     className="h-8 w-full justify-normal px-2! text-foreground/80"
                     variant="ghost"
                   >
-                    <Bolt className="size-4! text-muted-foreground" /> Edit
+                    <Edit className="size-4! text-muted-foreground" /> Edit
                   </Button>
                 </ProjectSettings>
               </DropdownMenuItem>
@@ -177,7 +179,7 @@ export default function ProjectCard({
                     variant="ghost"
                     className="h-8 w-full justify-normal px-2! text-foreground/80"
                   >
-                    <Trash className="size-3.5!" />
+                    <Trash2 className="size-3.5!" />
                     Delete
                   </Button>
                 </DeleteProject>
