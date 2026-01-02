@@ -179,7 +179,7 @@ export default function ProjectCard({
                     variant="ghost"
                     className="h-8 w-full justify-normal px-2! text-foreground/80"
                   >
-                    <Trash2 className="size-3.5!" />
+                    <Trash2 className="size-4! text-muted-foreground" />
                     Delete
                   </Button>
                 </DeleteProject>
