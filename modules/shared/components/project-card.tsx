@@ -60,14 +60,13 @@ export default function ProjectCard({
 
   const actualBasePath = basePath || defaultBasePath;
   const handleCopyAll = () => {
-    try{
-    const formatToString = Object.entries(project?.envs || {})
-      .map(([key, value]) => `${key}="${value}"`)
-      .join("\n");
-    navigator.clipboard.writeText(formatToString);
-    toast.success("Copied to clipboard");
-    }
-    catch(error){
+    try {
+      const formatToString = Object.entries(project?.envs || {})
+        .map(([key, value]) => `${key}="${value}"`)
+        .join("\n");
+      navigator.clipboard.writeText(formatToString);
+      toast.success("Copied to clipboard");
+    } catch (error) {
       toast.error("Failed to copy to clipboard");
     }
   };
@@ -84,7 +83,7 @@ export default function ProjectCard({
       <div className="flex items-center justify-between w-full">
         <div className="flex items-center gap-4">
           <Tooltip>
-            <TooltipTrigger>
+            <TooltipTrigger asChild>
               <Button
                 size="icon"
                 variant="secondary"
@@ -129,10 +128,8 @@ export default function ProjectCard({
             </p>
           )}
           <Tooltip>
-            <TooltipTrigger>
-              <Button size="icon-sm" variant="ghost"
-                onClick={handleCopyAll}
-              >
+            <TooltipTrigger asChild>
+              <Button size="icon-sm" variant="ghost" onClick={handleCopyAll}>
                 <Copy className="size-3" />
               </Button>
             </TooltipTrigger>

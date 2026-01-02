@@ -51,7 +51,11 @@ export default function CreateProject({
   };
 
   if (error) {
-    toast.error(error.message);
+    if (JSON.parse(error.message)[0].code == "too_small") {
+      toast.error("Project name must be at least 3 characters long");
+    } else {
+      toast.error("An error occurred while creating the project");
+    }
   }
 
   const content = (
