@@ -10,31 +10,26 @@ import TeamProjectCard from "./project-card";
 import EmptyProject from "../project/empty";
 
 function ProjectsGrid({ projects }: { projects: any[] }) {
-  const [viewType, setViewType] = useState<"flex" | "grid">("grid");
   const searchParams = useSearchParams();
-  const param = searchParams.get("viewType");
-
-  useEffect(() => {
-    if (param) setViewType(param as "flex" | "grid");
-  }, [param]);
+  const viewType = (searchParams.get("viewType") as "list" | "grid") ?? "grid";
 
   const gridView = "gap-4 sm:grid-cols-2 md:grid-cols-3";
   const flexView = "grid-cols-1";
 
   return (
-    <div className={cn("grid", viewType === "flex" ? flexView : gridView)}>
+    <div className={cn("grid", viewType === "list" ? flexView : gridView)}>
       {projects.map((project) => (
         <TeamProjectCard
-          viewType={viewType}
-          project={project}
           key={project.id}
+          project={project}
+          viewType={viewType}
         />
       ))}
     </div>
   );
 }
 
-export default function AllTeamProjects({slug}:{slug:string}) {
+export default function AllTeamProjects({ slug }: { slug: string }) {
   const trpc = useTRPC();
 
   const { data: projects, isPending } = useQuery(
@@ -44,7 +39,7 @@ export default function AllTeamProjects({slug}:{slug:string}) {
   useEffect(() => {
     if (slug) {
       qc.invalidateQueries(
-        trpc.projects.get_all.queryOptions({ type: "TEAM" })
+        trpc.projects.get_all.queryOptions({ type: "TEAM" }),
       );
     }
   }, [slug]);

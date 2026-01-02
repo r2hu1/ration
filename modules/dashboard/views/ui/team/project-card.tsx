@@ -16,7 +16,7 @@ interface Project {
 
 interface TeamProjectCardProps {
   project: Project;
-  viewType: "grid" | "flex";
+  viewType: "grid" | "list";
 }
 
 export default function TeamProjectCard({
