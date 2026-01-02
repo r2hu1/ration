@@ -93,13 +93,6 @@ export default function ProjectSettings({
         prevType={prevType}
         projectType={projectType}
       />
-      <div className="flex items-center gap-4 py-2">
-        <DeleteProject slug={slug} projectType={projectType}>
-        <Button>
-        Delete <Trash className="size-3.5!" />
-        </Button>
-        </DeleteProject>
-      </div>
     </div>
   );
 

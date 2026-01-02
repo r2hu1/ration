@@ -9,17 +9,29 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import {
+  Bolt,
   Copy,
   EllipsisVertical,
   FlaskConical,
+  Pencil,
   Pickaxe,
   Radio,
+  Trash,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ProjectSettings from "./project-settings";
 import { ProjectType } from "./change-project-type";
 import { toast } from "sonner";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+} from "@radix-ui/react-dropdown-menu";
+import {
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import DeleteProject from "@/modules/dashboard/views/ui/project/delete-project";
 
 const projectTypes = {
   development: Pickaxe,
@@ -135,17 +147,43 @@ export default function ProjectCard({
             </TooltipTrigger>
             <TooltipContent>Copy to clipboard</TooltipContent>
           </Tooltip>
-          <ProjectSettings
-            slug={project.slug}
-            prevName={project.name}
-            prevDescription={project.description as string}
-            prevType={project.type}
-            projectType={projectType}
-          >
-            <Button size="icon-sm" variant="ghost">
-              <EllipsisVertical className="size-3.5" />
-            </Button>
-          </ProjectSettings>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="icon-sm" variant="ghost">
+                <EllipsisVertical className="size-3.5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <p className="text-xs text-muted-foreground p-1">Actions</p>
+              <DropdownMenuItem asChild>
+                <ProjectSettings
+                  slug={project.slug}
+                  prevName={project.name}
+                  prevDescription={project.description as string}
+                  prevType={project.type}
+                  projectType={projectType}
+                >
+                  <Button
+                    className="h-8 w-full justify-normal px-2! text-foreground/80"
+                    variant="ghost"
+                  >
+                    <Bolt className="size-4! text-muted-foreground" /> Edit
+                  </Button>
+                </ProjectSettings>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <DeleteProject slug={project.slug} projectType={projectType}>
+                  <Button
+                    variant="ghost"
+                    className="h-8 w-full justify-normal px-2! text-foreground/80"
+                  >
+                    <Trash className="size-3.5!" />
+                    Delete
+                  </Button>
+                </DeleteProject>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
