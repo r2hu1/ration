@@ -9,15 +9,12 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import {
-  Bolt,
   Copy,
   Edit,
   EllipsisVertical,
   FlaskConical,
-  Pencil,
   Pickaxe,
   Radio,
-  Trash,
   Trash2,
 } from "lucide-react";
 import Link from "next/link";
@@ -34,6 +31,7 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import DeleteProject from "@/modules/dashboard/views/ui/project/delete-project";
+import { decrypt } from "@/lib/crypto";
 
 const projectTypes = {
   development: Pickaxe,
@@ -73,17 +71,17 @@ export default function ProjectCard({
       : pathname.split("/").slice(0, 3).join("/");
 
   const actualBasePath = basePath || defaultBasePath;
-  const handleCopyAll = () => {
-    try {
-      const formatToString = Object.entries(project?.envs || {})
-        .map(([key, value]) => `${key}="${value}"`)
-        .join("\n");
-      navigator.clipboard.writeText(formatToString);
-      toast.success("Copied to clipboard");
-    } catch (error) {
-      toast.error("Failed to copy to clipboard");
-    }
-  };
+  // const handleCopyAll = () => {
+  //   try {
+  //     const formatToString = Object.entries(project?.envs || {})
+  //       .map(([key, value]) => `${key}="${decrypt(value as string)}"`)
+  //       .join("\n");
+  //     navigator.clipboard.writeText(formatToString);
+  //     toast.success("Copied to clipboard");
+  //   } catch (error) {
+  //     toast.error("Failed to copy to clipboard");
+  //   }
+  // };
 
   return (
     <div
@@ -141,14 +139,14 @@ export default function ProjectCard({
               Updated on {new Date(project.updatedAt).toDateString()}
             </p>
           )}
-          <Tooltip>
+          {/*<Tooltip>
             <TooltipTrigger asChild>
               <Button size="icon-sm" variant="ghost" onClick={handleCopyAll}>
                 <Copy className="size-3" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Copy to clipboard</TooltipContent>
-          </Tooltip>
+          </Tooltip>*/}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button size="icon-sm" variant="ghost">
