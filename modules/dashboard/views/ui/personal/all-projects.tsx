@@ -10,19 +10,19 @@ import PersonalProjectCard from "./project-card";
 import EmptyProject from "../project/empty";
 
 function ProjectsGrid({ projects }: { projects: any[] }) {
-  const [viewType, setViewType] = useState<"flex" | "grid">("grid");
+  const [viewType, setViewType] = useState<"list" | "grid">("grid");
   const searchParams = useSearchParams();
   const param = searchParams.get("viewType");
 
   useEffect(() => {
-    if (param) setViewType(param as "flex" | "grid");
+    if (param) setViewType(param as "list" | "grid");
   }, [param]);
 
   const gridView = "gap-4 sm:grid-cols-2 md:grid-cols-3";
   const flexView = "grid-cols-1";
 
   return (
-    <div className={cn("grid", viewType === "flex" ? flexView : gridView)}>
+    <div className={cn("grid", viewType === "list" ? flexView : gridView)}>
       {projects.map((project) => (
         <PersonalProjectCard
           viewType={viewType}

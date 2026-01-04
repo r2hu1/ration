@@ -8,10 +8,10 @@ import CreatePersonalProject from "./personal/create-project";
 import { useRouter } from "next/navigation";
 
 export default function PersonalToolbar() {
-  const [viewType, setViewType] = useState<"grid" | "flex">("grid");
+  const [viewType, setViewType] = useState<"grid" | "list">("grid");
 
   const router = useRouter();
-  const handleViewTypeChange = (type: "grid" | "flex") => {
+  const handleViewTypeChange = (type: "grid" | "list") => {
     setViewType(type);
 
     const params = new URLSearchParams(window.location.search);
@@ -61,8 +61,8 @@ export default function PersonalToolbar() {
               <Grid2X2 className="size-4" />
             </Button>
             <Button
-              onClick={() => handleViewTypeChange("flex")}
-              variant={viewType === "flex" ? "secondary" : "ghost"}
+              onClick={() => handleViewTypeChange("list")}
+              variant={viewType === "list" ? "secondary" : "ghost"}
               size="icon-sm"
             >
               <List className="size-4" />
