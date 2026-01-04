@@ -11,23 +11,37 @@ import EmptyProject from "../project/empty";
 
 function ProjectsGrid({ projects }: { projects: any[] }) {
   const [viewType, setViewType] = useState<"list" | "grid">("grid");
+  const [searchQuery, setSearchQuery] = useState("");
   const searchParams = useSearchParams();
+
   const param = searchParams.get("viewType");
+  const query = searchParams.get("search");
 
   useEffect(() => {
-    if (param) setViewType(param as "list" | "grid");
+    if (param === "list" || param === "grid") {
+      setViewType(param);
+    }
   }, [param]);
+
+  useEffect(() => {
+    setSearchQuery(query ?? "");
+  }, [query]);
 
   const gridView = "gap-4 sm:grid-cols-2 md:grid-cols-3";
   const flexView = "grid-cols-1";
 
+  const filteredProjects = projects.filter((p) => {
+    if (!searchQuery.trim()) return true;
+    return p.name?.toLowerCase().includes(searchQuery.trim().toLowerCase());
+  });
+
   return (
     <div className={cn("grid", viewType === "list" ? flexView : gridView)}>
-      {projects.map((project) => (
+      {filteredProjects.map((project) => (
         <PersonalProjectCard
+          key={project.id}
           viewType={viewType}
           project={project}
-          key={project.id}
         />
       ))}
     </div>

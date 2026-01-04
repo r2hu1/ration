@@ -11,14 +11,21 @@ import EmptyProject from "../project/empty";
 
 function ProjectsGrid({ projects }: { projects: any[] }) {
   const searchParams = useSearchParams();
+
   const viewType = (searchParams.get("viewType") as "list" | "grid") ?? "grid";
+  const searchQuery = searchParams.get("search") ?? "";
 
   const gridView = "gap-4 sm:grid-cols-2 md:grid-cols-3";
   const flexView = "grid-cols-1";
 
+  const filteredProjects = projects.filter((p) => {
+    if (!searchQuery.trim()) return true;
+    return p.name?.toLowerCase().includes(searchQuery.trim().toLowerCase());
+  });
+
   return (
     <div className={cn("grid", viewType === "list" ? flexView : gridView)}>
-      {projects.map((project) => (
+      {filteredProjects.map((project) => (
         <TeamProjectCard
           key={project.id}
           project={project}
@@ -31,42 +38,43 @@ function ProjectsGrid({ projects }: { projects: any[] }) {
 
 export default function AllTeamProjects({ slug }: { slug: string }) {
   const trpc = useTRPC();
-
-  const { data: projects, isPending } = useQuery(
-    trpc.projects.get_all.queryOptions({ type: "TEAM" }),
-  );
   const qc = useQueryClient();
+
+  const queryOptions = trpc.projects.get_all.queryOptions({ type: "TEAM" });
+
+  const { data: projects, isPending } = useQuery(queryOptions);
+
   useEffect(() => {
     if (slug) {
-      qc.invalidateQueries(
-        trpc.projects.get_all.queryOptions({ type: "TEAM" }),
-      );
+      qc.invalidateQueries({ queryKey: queryOptions.queryKey });
     }
-  }, [slug]);
+  }, [slug, qc, queryOptions.queryKey]);
 
   if (isPending) {
     return (
       <div className="grid gap-4">
         {Array.from({ length: 5 }, (_, i) => (
-          <Skeleton className="h-16 w-full" key={i} />
+          <Skeleton key={i} className="h-16 w-full" />
         ))}
       </div>
     );
   }
-  //@ts-ignore
-  if (!isPending && !projects.length) return <EmptyProject />;
+
+  if (!projects || projects.length === 0) {
+    return <EmptyProject />;
+  }
 
   return (
     <Suspense
       fallback={
         <div className="grid gap-4">
           {Array.from({ length: 5 }, (_, i) => (
-            <Skeleton className="h-16 w-full" key={i} />
+            <Skeleton key={i} className="h-16 w-full" />
           ))}
         </div>
       }
     >
-      <ProjectsGrid projects={projects as any} />
+      <ProjectsGrid projects={projects} />
     </Suspense>
   );
 }
