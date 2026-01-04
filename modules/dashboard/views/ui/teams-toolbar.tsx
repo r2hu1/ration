@@ -41,7 +41,11 @@ export default function TeamsToolbar({ teamId }: { teamId: string }) {
   };
 
   const fetchRole = async () => {
-    const { data, error } = await authClient.organization.getActiveMemberRole();
+    const { data, error } = await authClient.organization.getActiveMemberRole({
+      query: {
+        organizationId: teamId,
+      },
+    });
     if (!error) {
       setRole(data.role);
     }

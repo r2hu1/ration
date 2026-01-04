@@ -17,7 +17,7 @@ export const generateMetadata = async ({
   return {
     title: {
       template: `${data?.name} | %s`,
-      default: "My Team",
+      default: data?.name ?? "My Team",
     },
     openGraph: {
       title: data?.name,
