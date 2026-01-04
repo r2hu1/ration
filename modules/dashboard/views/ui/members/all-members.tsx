@@ -95,12 +95,10 @@ export default function AllMembers() {
                 !["owner", "admin"].includes(member.role))) && (
               <div className="flex items-center gap-3">
                 <Button
-                  size="sm"
+                  size="icon-sm"
                   variant="outline"
-                  className="h-8 w-8 sm:w-auto"
                   aria-label="Manage member"
                 >
-                  <span className="hidden sm:flex">Manage</span>
                   <Bolt className="size-3.5" />
                 </Button>
 

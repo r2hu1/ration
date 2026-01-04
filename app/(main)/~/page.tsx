@@ -10,5 +10,5 @@ export default async function DashboardPage() {
   const data = await auth.api.getFullOrganization({
     headers: await headers(),
   });
-  return redirect(data?.slug ? `/~/${data?.slug}` : "/~/me");
+  return redirect(data?.id ? `/~/${data?.id}` : "/~/me");
 }

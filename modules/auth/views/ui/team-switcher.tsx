@@ -11,12 +11,12 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { authClient } from "@/lib/auth-client";
 import CreateTeam from "@/modules/dashboard/views/ui/create-team";
 import { useTRPC } from "@/trpc/client";
-import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronsUpDown, Plus, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -30,36 +30,31 @@ export default function TeamSwitcher() {
   const { data: teams } = useQuery(trpc.teams.get_all.queryOptions());
   const { data: activeOrg } = authClient.useActiveOrganization();
 
-  const [position, setPosition] = useState<string>("");
+  const [value, setValue] = useState("me");
 
   useEffect(() => {
     if (!teams) return;
-    const slugs = teams.map((t) => t.slug);
-    Promise.all(slugs.map((slug) => router.prefetch(`/~/${slug}`)));
 
-    if (activeOrg) {
-      const found = teams.find((t) => t.name === activeOrg.name);
-      if (found) setPosition(found.slug);
+    Promise.all(teams.map((t) => router.prefetch(`/~/${t.id}`)));
+
+    if (activeOrg?.id) {
+      setValue(activeOrg.id);
     } else {
-      setPosition("me");
+      setValue("me");
     }
-  }, [teams, activeOrg]);
+  }, [teams, activeOrg?.id, router]);
 
-  const handleTeamSwitch = async (slug: string) => {
-    try {
-      if (slug === "me") {
-        setPosition("me");
-        await authClient.organization.setActive({ organizationId: null });
-        router.push(`/~/me`);
-        return;
-      }
+  const handleSwitch = async (id: string) => {
+    setValue(id);
 
-      setPosition(slug);
-      await authClient.organization.setActive({ organizationSlug: slug });
-      router.push(`/~/${slug}`);
-    } catch (err) {
-      console.error("Failed to switch team:", err);
+    if (id === "me") {
+      await authClient.organization.setActive({ organizationId: null });
+      router.push("/~/me");
+      return;
     }
+
+    await authClient.organization.setActive({ organizationId: id });
+    router.push(`/~/${id}`);
   };
 
   return (
@@ -67,29 +62,26 @@ export default function TeamSwitcher() {
       <DropdownMenuTrigger asChild>
         <Button
           variant="secondary"
-          className="bg-secondary/40 sm:min-w-[150px] gap-2"
           size="sm"
+          className="bg-secondary/40 sm:min-w-[150px] gap-2"
         >
-          {activeOrg?.name || auth?.user?.name}
-          <ChevronsUpDown className="size-3.5 ml-auto" />
+          {activeOrg?.name ?? auth?.user?.name}
+          <ChevronsUpDown className="ml-auto size-3.5" />
         </Button>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="sm:w-[300px] sm:ml-[70px]">
         <DropdownMenuLabel className="flex items-center">
-          Select or create team <Users className="size-4 ml-auto" />
+          Select or create team <Users className="ml-auto size-4" />
         </DropdownMenuLabel>
+
         <DropdownMenuSeparator />
 
-        <ScrollArea>
-          <DropdownMenuRadioGroup
-            value={position}
-            onValueChange={handleTeamSwitch}
-            className="max-h-64"
-          >
+        <ScrollArea className="max-h-64">
+          <DropdownMenuRadioGroup value={value} onValueChange={handleSwitch}>
             <DropdownMenuRadioItem value="me" className="grid gap-px">
               {auth?.user?.name}
-              <div className="flex items-center gap-3 justify-between w-full">
+              <div className="flex items-center justify-between">
                 <p className="text-xs">Personal Workspace</p>
                 <Badge variant="outline">Owner</Badge>
               </div>
@@ -98,12 +90,12 @@ export default function TeamSwitcher() {
             {teams?.map((team) => (
               <DropdownMenuRadioItem
                 key={team.id}
-                value={team.slug}
+                value={team.id}
                 className="grid gap-2"
               >
                 {team.name}
-                <p className="text-xs text-foreground/80 flex items-center justify-between">
-                  created on{" "}
+                <p className="text-xs text-foreground/80 flex justify-between">
+                  created on
                   <span className="text-foreground/60">
                     {new Date(team.createdAt).toDateString()}
                   </span>
@@ -116,13 +108,10 @@ export default function TeamSwitcher() {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem
-          onSelect={(e) => e.preventDefault()}
-          className="p-0 border-0 outline-0"
-        >
+        <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="p-0">
           <CreateTeam>
-            <Button variant="ghost" className="w-full" size="sm">
-              Create Team <Plus className="size-4 ml-auto" />
+            <Button variant="ghost" size="sm" className="w-full">
+              Create Team <Plus className="ml-auto size-4" />
             </Button>
           </CreateTeam>
         </DropdownMenuItem>
