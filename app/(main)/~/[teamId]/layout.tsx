@@ -5,7 +5,7 @@ import { headers } from "next/headers";
 export const generateMetadata = async ({
   params,
 }: {
-  params: { teamId: string };
+  params: Promise<{ teamId: string }>;
 }) => {
   const param = await params;
   const data = await auth.api.getFullOrganization({
@@ -35,7 +35,7 @@ export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
-  params: { teamId: string };
+  params: Promise<{ teamId: string }>;
 }) {
   const param = await params;
   return (

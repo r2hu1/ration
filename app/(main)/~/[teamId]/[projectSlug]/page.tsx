@@ -1,6 +1,5 @@
 import TeamProjectView from "@/modules/dashboard/views/ui/team/team-project-view";
 import { caller } from "@/trpc/caller";
-import { trpc } from "@/trpc/server";
 
 export const generateMetadata = async ({
   params,
@@ -27,9 +26,11 @@ export default async function TeamProjectPage({
 }: {
   params: { projectSlug: string };
 }) {
+  const param = await params;
+
   return (
     <div>
-      <TeamProjectView projectSlug={params.projectSlug} />
+      <TeamProjectView projectSlug={param.projectSlug} />
     </div>
   );
 }
