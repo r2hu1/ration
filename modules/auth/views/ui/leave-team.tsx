@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import ResponsiveModal from "@/modules/shared/components/responsive-modal";
+import { useApp } from "@/modules/providers/middleware";
 
 export default function LeaveTeam({
   slug,
@@ -21,13 +22,12 @@ export default function LeaveTeam({
   const trpc = useTRPC();
   const queryClient = useQueryClient();
   const router = useRouter();
-
-  const { data: activeOrganization } = authClient.useActiveOrganization();
+  const { organization } = useApp();
 
   const handleTeamLeave = async () => {
     setLoading(true);
     const { data, error } = await authClient.organization.leave({
-      organizationId: activeOrganization?.id as string,
+      organizationId: slug,
     });
     if (!error) {
       toast.success("You have successfully left the team.");
@@ -45,7 +45,7 @@ export default function LeaveTeam({
       open={modalOpen}
       onOpenChange={setModalOpen}
       title="Are you sure?"
-      description={`You are about to leave ${activeOrganization?.name}. Are you sure you want to proceed? This action cannot be undone.`}
+      description={`You are about to leave ${organization?.name}. Are you sure you want to proceed? This action cannot be undone.`}
       content=""
       confirmText={
         <>
