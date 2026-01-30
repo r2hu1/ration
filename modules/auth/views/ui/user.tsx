@@ -27,7 +27,7 @@ import CreateTeam from "@/modules/dashboard/views/ui/create-team";
 import { Logout } from "./logout";
 
 export default function User() {
-  const { data } = useAuthState();
+  const auth = useAuthState();
   const isMobile = useIsMobile();
   const Slot = isMobile ? Drawer : DropdownMenu;
   const SlotContent = isMobile ? DrawerContent : DropdownMenuContent;
@@ -49,8 +49,8 @@ export default function User() {
     <Slot modal>
       <SlotTrigger asChild>
         <Avatar>
-          <AvatarFallback>{data?.user?.name.slice(0, 2)}</AvatarFallback>
-          <AvatarImage src={data?.user?.image} />
+          <AvatarFallback>{auth?.data?.user?.name.slice(0, 2)}</AvatarFallback>
+          <AvatarImage src={auth?.data?.user?.image as string} />
         </Avatar>
       </SlotTrigger>
       <SlotContent
@@ -65,9 +65,9 @@ export default function User() {
           </DrawerHeader>
         )}
         <div className="text-sm hidden px-2 gap-px sm:grid py-2">
-          <h2>{data?.user?.name}</h2>
+          <h2>{auth?.data?.user?.name}</h2>
           <span className="text-xs text-foreground/80">
-            {data?.user?.email}
+            {auth?.data?.user?.email}
           </span>
         </div>
         <SlotSeparator className="hidden sm:flex" />

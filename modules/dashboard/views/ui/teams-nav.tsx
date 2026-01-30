@@ -8,7 +8,7 @@ import { useAuthState } from "@/components/providers/auth-context";
 export default function TeamsNav() {
   const path = usePathname();
   const parts = path.split("/").filter(Boolean);
-  const { data } = useAuthState();
+  const auth = useAuthState();
 
   const tildeIndex = parts.indexOf("~");
   const teamId = parts.length > tildeIndex + 1 ? parts[tildeIndex + 1] : "";
@@ -70,7 +70,7 @@ export default function TeamsNav() {
       >
         {tabs
           .filter((tab) =>
-            teamId == data?.user?.name?.split(" ").join("-").toLowerCase()
+            teamId == auth?.data?.user?.name?.split(" ").join("-").toLowerCase()
               ? tab.label !== "Members"
               : true,
           )
