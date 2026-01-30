@@ -9,6 +9,7 @@ import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 import { authClient } from "@/lib/auth-client";
 import { useTRPC } from "@/trpc/client";
 import InviteMembers from "./invite";
+import { useApp } from "@/modules/providers/middleware";
 
 export default function MembersToolbar({ teamId }: { teamId: string }) {
   const [role, setRole] = useState<string | null>(null);
@@ -26,10 +27,15 @@ export default function MembersToolbar({ teamId }: { teamId: string }) {
     window.history.replaceState(null, "", url);
   };
 
+  const { organization } = useApp();
+  const user = useAuthState();
+
   const fetchRole = async () => {
-    const { data, error } = await authClient.organization.getActiveMemberRole();
-    if (!error) {
-      setRole(data.role);
+    const role = organization?.members
+      .filter((member) => member.userId === user?.data?.user.id)
+      .map((member) => member.role)[0];
+    if (role) {
+      setRole(role);
     }
   };
   useEffect(() => {

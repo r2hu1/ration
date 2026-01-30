@@ -15,7 +15,7 @@ import KickUser from "./kick";
 
 export default function AllMembers() {
   const trpc = useTRPC();
-  const { data: user } = useAuthState();
+  const auth = useAuthState();
 
   const [role, setRole] = useState<string | null>(null);
   const [pending, setPending] = useState<any[]>([]);
@@ -95,10 +95,10 @@ export default function AllMembers() {
             </div>
           </div>
 
-          {user &&
-            ((role === "owner" && member.userId !== user.session.userId) ||
+          {auth?.data &&
+            ((role === "owner" && member.userId !== auth.data.session.userId) ||
               (role === "admin" &&
-                member.userId !== user.session.userId &&
+                member.userId !== auth.data.session.userId &&
                 !["owner", "admin"].includes(member.role))) && (
               <div className="flex items-center gap-3">
                 <Button size="icon-sm" variant="outline">

@@ -1,12 +1,22 @@
 "use client";
 
-import type { Organization } from "better-auth/plugins";
+import type {
+  Invitation,
+  Member,
+  Organization,
+  OrganizationOptions,
+} from "better-auth/plugins";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect } from "react";
 import { authClient } from "@/lib/auth-client";
 
+interface OrganizationContext extends Organization {
+  members: Member[];
+  invitations: Invitation[];
+}
+
 interface AppContextValue {
-  organization: Organization | null;
+  organization: OrganizationContext | null;
 }
 
 const AppContext = createContext<AppContextValue | null>(null);

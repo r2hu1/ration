@@ -23,7 +23,7 @@ import CreateTeam from "@/modules/dashboard/views/ui/create-team";
 import { useTRPC } from "@/trpc/client";
 
 export default function TeamSwitcher() {
-  const { data: auth } = useAuthState();
+  const auth = useAuthState();
   const trpc = useTRPC();
   const router = useRouter();
 
@@ -65,7 +65,7 @@ export default function TeamSwitcher() {
           size="sm"
           className="bg-secondary/40 sm:min-w-[150px] gap-2"
         >
-          {activeOrg?.name ?? auth?.user?.name}
+          {activeOrg?.name ?? auth?.data?.user?.name}
           <ChevronsUpDown className="ml-auto size-3.5" />
         </Button>
       </DropdownMenuTrigger>
@@ -80,7 +80,7 @@ export default function TeamSwitcher() {
         <ScrollArea className="max-h-64">
           <DropdownMenuRadioGroup value={value} onValueChange={handleSwitch}>
             <DropdownMenuRadioItem value="me" className="grid gap-px">
-              {auth?.user?.name}
+              {auth?.data?.user?.name}
               <div className="flex items-center justify-between">
                 <p className="text-xs">Personal Workspace</p>
                 <Badge variant="outline">Owner</Badge>

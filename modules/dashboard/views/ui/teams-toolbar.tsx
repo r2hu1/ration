@@ -6,6 +6,8 @@ import { ButtonGroup } from "@/components/ui/button-group";
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 import { authClient } from "@/lib/auth-client";
 import CreateProject from "@/modules/shared/components/create-project";
+import { useApp } from "@/modules/providers/middleware";
+import { useAuthState } from "@/components/providers/auth-context";
 
 export default function TeamsToolbar({ teamId }: { teamId: string }) {
   const [viewType, setViewType] = useState<"grid" | "list">("grid");
@@ -40,14 +42,15 @@ export default function TeamsToolbar({ teamId }: { teamId: string }) {
     window.history.replaceState(null, "", url);
   };
 
+  const { organization } = useApp();
+  const user = useAuthState();
+
   const fetchRole = async () => {
-    const { data, error } = await authClient.organization.getActiveMemberRole({
-      query: {
-        organizationId: teamId,
-      },
-    });
-    if (!error) {
-      setRole(data.role);
+    const role = organization?.members
+      .filter((member) => member.userId === user?.data?.user.id)
+      .map((member) => member.role)[0];
+    if (role) {
+      setRole(role);
     }
   };
   useEffect(() => {
