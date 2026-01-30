@@ -1,26 +1,26 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
+import { ChevronsUpDown, Plus, Users } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useAuthState } from "@/components/providers/auth-context";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { authClient } from "@/lib/auth-client";
 import CreateTeam from "@/modules/dashboard/views/ui/create-team";
 import { useTRPC } from "@/trpc/client";
-import { useQuery } from "@tanstack/react-query";
-import { ChevronsUpDown, Plus, Users } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 
 export default function TeamSwitcher() {
   const { data: auth } = useAuthState();

@@ -1,13 +1,13 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { useTRPC } from "@/trpc/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { cn } from "@/lib/utils";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import TeamProjectCard from "./project-card";
+import { cn } from "@/lib/utils";
+import { useTRPC } from "@/trpc/client";
 import EmptyProject from "../project/empty";
+import TeamProjectCard from "./project-card";
 
 function ProjectsGrid({ projects }: { projects: any[] }) {
   const searchParams = useSearchParams();

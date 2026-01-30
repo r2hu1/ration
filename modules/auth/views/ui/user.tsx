@@ -1,19 +1,11 @@
 "use client";
-import { useAuthState } from "@/components/providers/auth-context";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { AvatarImage } from "@radix-ui/react-avatar";
 import { Home, UserPlus } from "lucide-react";
-import { Logout } from "./logout";
-import { ThemeChanger } from "@/components/ui/theme-changer";
 import Link from "next/link";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useRouter } from "next/navigation";
+import { useAuthState } from "@/components/providers/auth-context";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { DialogTitle } from "@/components/ui/dialog";
 import {
   Drawer,
   DrawerContent,
@@ -21,10 +13,18 @@ import {
   DrawerHeader,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { DialogTitle } from "@/components/ui/dialog";
-import CreateTeam from "@/modules/dashboard/views/ui/create-team";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ThemeChanger } from "@/components/ui/theme-changer";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import CreateTeam from "@/modules/dashboard/views/ui/create-team";
+import { Logout } from "./logout";
 
 export default function User() {
   const { data } = useAuthState();

@@ -1,5 +1,5 @@
-import PersonalToolbar from "@/modules/dashboard/views/ui/personal-toolbar";
 import AllPersonalProjects from "@/modules/dashboard/views/ui/personal/all-projects";
+import PersonalToolbar from "@/modules/dashboard/views/ui/personal-toolbar";
 
 export default async function PersonalDashboard() {
   return (

@@ -1,7 +1,7 @@
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { ThemeChanger } from "@/components/ui/theme-changer";
 import { Logo } from "./logo";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 export default function Header() {
   return (

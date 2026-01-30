@@ -1,5 +1,9 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
+import { LogOut, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useAuthState } from "@/components/providers/auth-context";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -7,10 +11,6 @@ import { authClient } from "@/lib/auth-client";
 import LeaveTeam from "@/modules/auth/views/ui/leave-team";
 import { useApp } from "@/modules/providers/middleware";
 import { useTRPC } from "@/trpc/client";
-import { useQuery } from "@tanstack/react-query";
-import { LogOut, Trash2 } from "lucide-react";
-import Link from "next/link";
-import { useEffect, useState } from "react";
 
 export default function TeamSettingsHeader({
   loading,

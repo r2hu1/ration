@@ -1,14 +1,14 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
+import { AlertTriangle } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Loader } from "@/components/ui/loader";
-import { useRouter } from "next/navigation";
-import { AlertTriangle } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
-import { toast } from "sonner";
 import { useTRPC } from "@/trpc/client";
-import { useQueryClient } from "@tanstack/react-query";
 
 export default function AcceptInvite({ inviteId }: { inviteId: string }) {
   const router = useRouter();

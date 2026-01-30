@@ -1,7 +1,7 @@
 "use client";
 
+import type { ProjectType } from "@/modules/shared/components/change-project-type";
 import ProjectSettings from "@/modules/shared/components/project-settings";
-import { ProjectType } from "@/modules/shared/components/change-project-type";
 
 interface TeamProjectSettingsProps {
   slug: string;

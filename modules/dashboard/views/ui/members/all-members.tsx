@@ -1,5 +1,9 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
+import { AlertTriangle, Bolt, LogOut } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import { useAuthState } from "@/components/providers/auth-context";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -7,11 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { authClient } from "@/lib/auth-client";
 import { useTRPC } from "@/trpc/client";
-import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle, Bolt, LogOut } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
 import KickUser from "./kick";
-import { useSearchParams } from "next/navigation";
 
 export default function AllMembers() {
   const trpc = useTRPC();

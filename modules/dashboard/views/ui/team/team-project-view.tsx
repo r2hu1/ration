@@ -1,10 +1,10 @@
 "use client";
 
-import ProjectView from "@/modules/shared/components/project-view";
-import { useTRPC } from "@/trpc/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
+import ProjectView from "@/modules/shared/components/project-view";
+import { useTRPC } from "@/trpc/client";
 
 export default function TeamProjectView({
   projectSlug,
@@ -21,7 +21,7 @@ export default function TeamProjectView({
       trpc.projects.get_by_slug.queryOptions({
         slug: projectSlug,
         type: "TEAM",
-      })
+      }),
     );
   }, [projectSlug]);
 

@@ -1,7 +1,7 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
 import { useEffect, useState } from "react";
+import { authClient } from "@/lib/auth-client";
 import TeamSettingsHeader from "./header";
 
 export default function TeamSettings({ slug }: { slug: string }) {

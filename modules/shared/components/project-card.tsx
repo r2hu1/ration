@@ -1,13 +1,9 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+  DropdownMenu,
+  DropdownMenuTrigger,
+} from "@radix-ui/react-dropdown-menu";
 import {
   Copy,
   Edit,
@@ -19,19 +15,23 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import ProjectSettings from "./project-settings";
-import { ProjectType } from "./change-project-type";
 import { toast } from "sonner";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import DeleteProject from "@/modules/dashboard/views/ui/project/delete-project";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { decrypt } from "@/lib/crypto";
+import { cn } from "@/lib/utils";
+import DeleteProject from "@/modules/dashboard/views/ui/project/delete-project";
+import type { ProjectType } from "./change-project-type";
+import ProjectSettings from "./project-settings";
 
 const projectTypes = {
   development: Pickaxe,

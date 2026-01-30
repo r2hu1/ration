@@ -1,10 +1,10 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Loader } from "@/components/ui/loader";
-import { authClient, signOut } from "@/lib/auth-client";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Loader } from "@/components/ui/loader";
+import { authClient, signOut } from "@/lib/auth-client";
 
 export const Logout = ({ ...props }) => {
   const [loading, setLoading] = useState(false);

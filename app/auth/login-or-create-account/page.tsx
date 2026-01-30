@@ -1,4 +1,8 @@
 "use client";
+import { Eye, EyeOff, Github, PenTool } from "lucide-react";
+import { redirect } from "next/navigation";
+import { type FormEvent, Suspense, useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { FieldSeparator } from "@/components/ui/field";
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
@@ -7,10 +11,6 @@ import { Loader } from "@/components/ui/loader";
 import { signIn, signUp, useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/modules/landing/views/ui/logo";
-import { Eye, EyeOff, Github, PenTool } from "lucide-react";
-import { redirect } from "next/navigation";
-import { FormEvent, Suspense, useState } from "react";
-import { toast } from "sonner";
 
 export default function LoginOrCreateAccountPage() {
   const user = useSession();

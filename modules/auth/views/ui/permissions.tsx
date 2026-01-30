@@ -1,11 +1,11 @@
-import { organization } from "@/db/schema";
+import { createAccessControl } from "better-auth/plugins/access";
 import {
   adminAc,
   defaultStatements,
   memberAc,
   ownerAc,
 } from "better-auth/plugins/organization/access";
-import { createAccessControl } from "better-auth/plugins/access";
+import { organization } from "@/db/schema";
 
 const statement = {
   ...defaultStatements,

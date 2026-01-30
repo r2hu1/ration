@@ -1,15 +1,15 @@
-import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
-import z from "zod";
 import { TRPCError } from "@trpc/server";
-import { db } from "@/db/client";
-import { eq, and } from "drizzle-orm";
-import { auth } from "@/lib/auth";
+import { and, eq } from "drizzle-orm";
 import { headers } from "next/headers";
+import z from "zod";
+import { db } from "@/db/client";
 import { personalProject, teamProject } from "@/db/schema";
+import { auth } from "@/lib/auth";
 import { decrypt, encrypt } from "@/lib/crypto";
+import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 
 const createProjectSchema = z.object({
-  name: z.string().min(4).max(100),
+  name: z.string().min(2).max(100),
   description: z.string().optional(),
   type: z.enum(["PERSONAL", "TEAM"]).default("PERSONAL"),
 });

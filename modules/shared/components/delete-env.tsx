@@ -1,10 +1,10 @@
 "use client";
 
-import { Loader } from "@/components/ui/loader";
-import { useTRPC } from "@/trpc/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Loader } from "@/components/ui/loader";
+import { useTRPC } from "@/trpc/client";
 import ResponsiveModal from "./responsive-modal";
 
 interface DeleteEnvProps {

@@ -1,4 +1,14 @@
 "use client";
+import {
+  Copy,
+  Edit,
+  EllipsisVertical,
+  Eye,
+  EyeOff,
+  Trash2,
+} from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,16 +22,6 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import {
-  Copy,
-  EllipsisVertical,
-  Eye,
-  EyeOff,
-  Trash2,
-  Edit,
-} from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
 import DeleteEnv from "./delete-env";
 import EditEnv from "./edit-env";
 

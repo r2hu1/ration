@@ -1,11 +1,11 @@
 "use client";
 
+import { LogOut, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { authClient } from "@/lib/auth-client";
 import LeaveTeam from "@/modules/auth/views/ui/leave-team";
-import { LogOut, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
 import DeleteTeam from "./delete-team";
 
 export default function DangerPageView({ teamId }: { teamId: string }) {

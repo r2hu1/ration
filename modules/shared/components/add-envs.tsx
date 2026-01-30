@@ -1,14 +1,14 @@
 "use client";
 
-import { useState, ClipboardEvent, ChangeEvent } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { FileText, Minus, Plus } from "lucide-react";
+import { type ChangeEvent, type ClipboardEvent, useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FileText, Minus, Plus } from "lucide-react";
-import { toast } from "sonner";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useTRPC } from "@/trpc/client";
 import { Loader } from "@/components/ui/loader";
+import { useTRPC } from "@/trpc/client";
 
 interface Env {
   key: string;

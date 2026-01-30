@@ -1,6 +1,6 @@
+import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import AppProvider from "@/modules/providers/middleware";
-import { headers } from "next/headers";
 
 export const generateMetadata = async ({
   params,

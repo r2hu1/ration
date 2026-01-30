@@ -1,7 +1,7 @@
 "use client";
 
+import type { ProjectType } from "@/modules/shared/components/change-project-type";
 import ProjectCard from "@/modules/shared/components/project-card";
-import { ProjectType } from "@/modules/shared/components/change-project-type";
 
 interface Project {
   id: string;

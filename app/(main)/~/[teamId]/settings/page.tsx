@@ -1,5 +1,5 @@
+import type { Metadata } from "next";
 import TeamSettings from "@/modules/dashboard/views/ui/settings";
-import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Team Settings",

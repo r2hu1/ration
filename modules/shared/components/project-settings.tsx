@@ -1,18 +1,18 @@
 "use client";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Trash } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader } from "@/components/ui/loader";
 import { Textarea } from "@/components/ui/textarea";
-import { useTRPC } from "@/trpc/client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { toast } from "sonner";
-import { usePathname, useRouter } from "next/navigation";
-import { Trash } from "lucide-react";
-import ResponsiveModal from "./responsive-modal";
-import ChangeProjectType, { ProjectType } from "./change-project-type";
 import DeleteProject from "@/modules/dashboard/views/ui/project/delete-project";
+import { useTRPC } from "@/trpc/client";
+import ChangeProjectType, { type ProjectType } from "./change-project-type";
+import ResponsiveModal from "./responsive-modal";
 
 interface ProjectSettingsProps {
   slug: string;

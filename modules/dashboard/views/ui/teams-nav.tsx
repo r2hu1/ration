@@ -1,9 +1,9 @@
 "use client";
 
-import { useAuthState } from "@/components/providers/auth-context";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useAuthState } from "@/components/providers/auth-context";
 
 export default function TeamsNav() {
   const path = usePathname();

@@ -1,10 +1,10 @@
 "use client";
+import { FolderCog, Grid2X2, List, Search } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 import { authClient } from "@/lib/auth-client";
-import { FolderCog, Grid2X2, List, Search } from "lucide-react";
-import { useEffect, useState } from "react";
 import CreateTeamProject from "./team/create-project";
 
 export default function TeamsToolbar({ teamId }: { teamId: string }) {

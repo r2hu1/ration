@@ -1,11 +1,11 @@
 "use client";
-import { Loader } from "@/components/ui/loader";
-import { authClient } from "@/lib/auth-client";
-import { useTRPC } from "@/trpc/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Loader } from "@/components/ui/loader";
+import { authClient } from "@/lib/auth-client";
 import ResponsiveModal from "@/modules/shared/components/responsive-modal";
+import { useTRPC } from "@/trpc/client";
 
 export default function KickUser({
   email,

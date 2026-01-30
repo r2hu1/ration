@@ -1,14 +1,14 @@
 "use client";
+import { useQuery } from "@tanstack/react-query";
+import { FolderCog, Grid2X2, List, Search, UserPlus } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useAuthState } from "@/components/providers/auth-context";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
-import { FolderCog, Grid2X2, List, Search, UserPlus } from "lucide-react";
-import { useEffect, useState } from "react";
-import InviteMembers from "./invite";
-import { useTRPC } from "@/trpc/client";
-import { useQuery } from "@tanstack/react-query";
-import { useAuthState } from "@/components/providers/auth-context";
 import { authClient } from "@/lib/auth-client";
+import { useTRPC } from "@/trpc/client";
+import InviteMembers from "./invite";
 
 export default function MembersToolbar({ teamId }: { teamId: string }) {
   const [role, setRole] = useState<string | null>(null);

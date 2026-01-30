@@ -1,8 +1,8 @@
 "use client";
 
-import { createContext, useContext, useEffect } from "react";
+import type { Organization } from "better-auth/plugins";
 import { useRouter } from "next/navigation";
-import { Organization } from "better-auth/plugins";
+import { createContext, useContext, useEffect } from "react";
 import { authClient } from "@/lib/auth-client";
 
 interface AppContextValue {

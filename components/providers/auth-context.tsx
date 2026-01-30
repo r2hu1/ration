@@ -1,7 +1,7 @@
 "use client";
-import { useSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect } from "react";
+import { useSession } from "@/lib/auth-client";
 
 const AuthContext = createContext<any>(null);
 

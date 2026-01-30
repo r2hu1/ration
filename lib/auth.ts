@@ -1,11 +1,11 @@
-import { db } from "@/db/client";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { sendEmail } from "./email";
-import { user } from "@/db/schema";
-import { eq } from "drizzle-orm";
 import { organization } from "better-auth/plugins";
+import { eq } from "drizzle-orm";
+import { db } from "@/db/client";
+import { user } from "@/db/schema";
 import { ac, admin, member, owner } from "@/modules/auth/views/ui/permissions";
+import { sendEmail } from "./email";
 
 export const auth = betterAuth({
   trustedOrigins: [

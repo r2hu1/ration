@@ -1,6 +1,6 @@
+import type { Metadata } from "next";
 import AllMembers from "@/modules/dashboard/views/ui/members/all-members";
 import MembersToolbar from "@/modules/dashboard/views/ui/members/members-toolbar";
-import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Team Members",

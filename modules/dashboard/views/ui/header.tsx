@@ -1,12 +1,12 @@
 "use client";
-import { ThemeChanger } from "@/components/ui/theme-changer";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { Logo } from "@/modules/landing/views/ui/logo";
-import { Logout } from "@/modules/auth/views/ui/logout";
-import User from "@/modules/auth/views/ui/user";
 import { Bell, Container, Star } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ThemeChanger } from "@/components/ui/theme-changer";
+import { Logout } from "@/modules/auth/views/ui/logout";
 import TeamSwitcher from "@/modules/auth/views/ui/team-switcher";
+import User from "@/modules/auth/views/ui/user";
+import { Logo } from "@/modules/landing/views/ui/logo";
 import TeamsNav from "./teams-nav";
 
 export default function Header() {

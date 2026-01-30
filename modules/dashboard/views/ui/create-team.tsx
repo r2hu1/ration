@@ -1,12 +1,12 @@
 "use client";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Loader } from "@/components/ui/loader";
-import { useTRPC } from "@/trpc/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Loader } from "@/components/ui/loader";
 import ResponsiveModal from "@/modules/shared/components/responsive-modal";
+import { useTRPC } from "@/trpc/client";
 
 export default function CreateTeam({
   children,

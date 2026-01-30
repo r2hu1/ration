@@ -1,7 +1,7 @@
-import { auth } from "@/lib/auth";
-import { isAuthenticated } from "@/lib/cache/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
+import { isAuthenticated } from "@/lib/cache/auth";
 
 export default async function DashboardPage() {
   const sess = await auth.api.getSession({ headers: await headers() });

@@ -1,13 +1,13 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { useTRPC } from "@/trpc/client";
 import { useQuery } from "@tanstack/react-query";
-import { cn } from "@/lib/utils";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import PersonalProjectCard from "./project-card";
+import { cn } from "@/lib/utils";
+import { useTRPC } from "@/trpc/client";
 import EmptyProject from "../project/empty";
+import PersonalProjectCard from "./project-card";
 
 function ProjectsGrid({ projects }: { projects: any[] }) {
   const [viewType, setViewType] = useState<"list" | "grid">("grid");
@@ -64,7 +64,7 @@ export default function AllPersonalProjects() {
       </div>
     );
   }
-  //@ts-ignore
+  //@ts-expect-error
   if (!isPending && !projects.length) return <EmptyProject />;
 
   return (

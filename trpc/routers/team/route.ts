@@ -1,12 +1,12 @@
-import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
-import z from "zod";
 import { TRPCError } from "@trpc/server";
-import { sendEmail } from "@/lib/email";
-import { auth } from "@/lib/auth";
+import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
+import z from "zod";
 import { db } from "@/db/client";
 import { organization } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { auth } from "@/lib/auth";
+import { sendEmail } from "@/lib/email";
+import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 
 const createTeamSchema = z.object({
   name: z.string().min(4).max(100),

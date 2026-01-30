@@ -1,11 +1,11 @@
 "use client";
+import { FolderCog, Grid2X2, List, Search } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
-import { FolderCog, Grid2X2, List, Search } from "lucide-react";
-import { useState } from "react";
 import CreatePersonalProject from "./personal/create-project";
-import { useRouter } from "next/navigation";
 
 export default function PersonalToolbar() {
   const [viewType, setViewType] = useState<"grid" | "list">("grid");

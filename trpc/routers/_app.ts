@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { baseProcedure, createTRPCRouter } from "../init";
-import { teamRouter } from "./team/route";
 import { projectRouter } from "./project/route";
+import { teamRouter } from "./team/route";
 export const appRouter = createTRPCRouter({
   teams: teamRouter,
   projects: projectRouter,

@@ -1,18 +1,18 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { useTRPC } from "@/trpc/client";
 import { useQuery } from "@tanstack/react-query";
 import { AlertTriangle, ArrowLeft, Bolt, Copy, Download } from "lucide-react";
-import ProjectSettings from "./project-settings";
-import ChangeProjectType, { ProjectType } from "./change-project-type";
 import Link from "next/link";
-import AddEnvs from "./add-envs";
-import { Skeleton } from "@/components/ui/skeleton";
-import EnvCard from "./env-card";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useTRPC } from "@/trpc/client";
+import AddEnvs from "./add-envs";
+import ChangeProjectType, { type ProjectType } from "./change-project-type";
+import EnvCard from "./env-card";
+import ProjectSettings from "./project-settings";
 
 interface ProjectViewProps {
   projectSlug: string;
