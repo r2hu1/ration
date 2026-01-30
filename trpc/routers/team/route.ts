@@ -116,7 +116,7 @@ export const teamRouter = createTRPCRouter({
       const [org] = await db
         .select()
         .from(organization)
-        .where(eq(organization.slug, input.teamId));
+        .where(eq(organization.id, input.teamId));
 
       const data = await auth.api.deleteOrganization({
         body: {
