@@ -5,9 +5,9 @@ import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import ProjectCard from "@/modules/shared/components/project-card";
 import { useTRPC } from "@/trpc/client";
 import EmptyProject from "../project/empty";
-import PersonalProjectCard from "./project-card";
 
 function ProjectsGrid({ projects }: { projects: any[] }) {
   const [viewType, setViewType] = useState<"list" | "grid">("grid");
@@ -38,10 +38,11 @@ function ProjectsGrid({ projects }: { projects: any[] }) {
   return (
     <div className={cn("grid", viewType === "list" ? flexView : gridView)}>
       {filteredProjects.map((project) => (
-        <PersonalProjectCard
+        <ProjectCard
           key={project.id}
-          viewType={viewType}
           project={project}
+          viewType={viewType}
+          projectType="PERSONAL"
         />
       ))}
     </div>

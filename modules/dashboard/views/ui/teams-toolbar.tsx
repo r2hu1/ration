@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 import { authClient } from "@/lib/auth-client";
-import CreateTeamProject from "./team/create-project";
+import CreateProject from "@/modules/shared/components/create-project";
 
 export default function TeamsToolbar({ teamId }: { teamId: string }) {
   const [viewType, setViewType] = useState<"grid" | "list">("grid");
@@ -82,11 +82,11 @@ export default function TeamsToolbar({ teamId }: { teamId: string }) {
               <List className="size-4" />
             </Button>
           </ButtonGroup>
-          <CreateTeamProject>
+          <CreateProject projectType="TEAM">
             <Button>
               Create New <FolderCog className="ml-auto size-4" />
             </Button>
-          </CreateTeamProject>
+          </CreateProject>
         </div>
       </div>
     </div>

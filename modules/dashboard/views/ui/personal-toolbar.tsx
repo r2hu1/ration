@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
-import CreatePersonalProject from "./personal/create-project";
+import CreateProject from "@/modules/shared/components/create-project";
 
 export default function PersonalToolbar() {
   const [viewType, setViewType] = useState<"grid" | "list">("grid");
@@ -68,11 +68,11 @@ export default function PersonalToolbar() {
               <List className="size-4" />
             </Button>
           </ButtonGroup>
-          <CreatePersonalProject>
+          <CreateProject projectType="PERSONAL">
             <Button>
               Create New <FolderCog className="ml-auto size-4" />
             </Button>
-          </CreatePersonalProject>
+          </CreateProject>
         </div>
       </div>
     </div>

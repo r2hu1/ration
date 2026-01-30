@@ -1,7 +1,16 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle, ArrowLeft, Bolt, Copy, Download } from "lucide-react";
+import {
+  AlertTriangle,
+  ArrowLeft,
+  Bolt,
+  Copy,
+  Download,
+  Edit,
+  EllipsisVertical,
+  Trash2,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
@@ -13,6 +22,13 @@ import AddEnvs from "./add-envs";
 import ChangeProjectType, { type ProjectType } from "./change-project-type";
 import EnvCard from "./env-card";
 import ProjectSettings from "./project-settings";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import DeleteProject from "@/modules/dashboard/views/ui/project/delete-project";
 
 interface ProjectViewProps {
   projectSlug: string;
@@ -123,17 +139,43 @@ export default function ProjectView({
           <Button onClick={handleCopyAll} size="icon-sm" variant="outline">
             <Copy className="size-3" />
           </Button>
-          <ProjectSettings
-            slug={projectSlug}
-            prevName={project.name}
-            prevDescription={project.description}
-            prevType={project.type as ProjectType}
-            projectType={projectType}
-          >
-            <Button size="icon-sm">
-              <Bolt className="size-3" />
-            </Button>
-          </ProjectSettings>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="icon-sm">
+                <EllipsisVertical className="size-3.5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="mr-10 mt-2">
+              <p className="text-xs text-muted-foreground p-1">Actions</p>
+              <DropdownMenuItem asChild>
+                <ProjectSettings
+                  slug={project.slug}
+                  prevName={project.name}
+                  prevDescription={project.description as string}
+                  prevType={project.type}
+                  projectType={projectType}
+                >
+                  <Button
+                    className="h-8 w-full justify-normal px-2! text-foreground/80"
+                    variant="ghost"
+                  >
+                    <Edit className="size-4! text-muted-foreground" /> Edit
+                  </Button>
+                </ProjectSettings>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <DeleteProject slug={project.slug} projectType={projectType}>
+                  <Button
+                    variant="ghost"
+                    className="h-8 w-full justify-normal px-2! text-foreground/80"
+                  >
+                    <Trash2 className="size-4! text-muted-foreground" />
+                    Delete
+                  </Button>
+                </DeleteProject>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
