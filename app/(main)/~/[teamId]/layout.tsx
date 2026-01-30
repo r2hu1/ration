@@ -22,10 +22,6 @@ export const generateMetadata = async ({
     openGraph: {
       title: data?.name,
       siteName: data?.name,
-      images: data?.logo ?? [],
-    },
-    icons: {
-      icon: data?.logo ?? [],
     },
   };
 };
