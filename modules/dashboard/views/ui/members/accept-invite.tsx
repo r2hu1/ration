@@ -28,7 +28,7 @@ export default function AcceptInvite({ inviteId }: { inviteId: string }) {
     if (!error) {
       toast.success("Invitation accepted!");
       queryClient.invalidateQueries(trpc.teams.get_all.queryOptions());
-      router.push(`/~/${inviteDetails.organizationSlug}`);
+      router.push(`/~/${inviteDetails.organizationId}`);
     } else {
       toast.error("Something went wrong");
       setError(error);

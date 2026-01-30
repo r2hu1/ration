@@ -12,6 +12,7 @@ export const auth = betterAuth({
     "https://www.ration.cloud",
     "https://ration.cloud",
     "https://rration.vercel.app",
+    "http://localhost:3000",
   ],
   database: drizzleAdapter(db, {
     provider: "pg",

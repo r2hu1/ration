@@ -9,7 +9,7 @@ interface SendEmailProps {
 export async function sendEmail({ to, subject, html }: SendEmailProps) {
   try {
     await transporter.sendMail({
-      from: process.env.GMAIL_PASS,
+      from: process.env.GMAIL_USER,
       to,
       subject,
       html,
