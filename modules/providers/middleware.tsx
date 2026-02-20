@@ -55,7 +55,7 @@ export default function AppProvider({
       }
 
       if (activeOrg.data?.id && activeOrg.data.id !== data.id) {
-        router.replace(`/~/${activeOrg.data.slug}`);
+        router.replace(`/~/${activeOrg.data.id}`);
       }
     }
 
