@@ -1,4 +1,4 @@
-# Ration (self-hostable)
+# Ration (self-hostable) (indev)
 
 An encrypted cloud platform for securely storing, syncing, and managing environment variables across all your projects and teams.
 
