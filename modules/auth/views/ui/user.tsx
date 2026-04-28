@@ -25,6 +25,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { authClient } from "@/lib/auth-client";
 import CreateTeam from "@/modules/dashboard/views/ui/create-team";
 import { Logout } from "./logout";
+import { useTheme } from "next-themes";
 
 export default function User() {
   const auth = useAuthState();
@@ -44,6 +45,8 @@ export default function User() {
       router.push("/~/me");
     }
   };
+
+  const { setTheme, resolvedTheme } = useTheme();
 
   return (
     <Slot modal>
@@ -85,13 +88,30 @@ export default function User() {
           </SlotItem>
         </CreateTeam>
         <SlotSeparator className="hidden sm:flex" />
-        <SlotItem className="flex items-center justify-between">
+        <SlotItem
+          className="flex items-center justify-between"
+          onSelect={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+        >
           Toggle Theme
-          <ThemeChanger
-            variant="ghost"
-            className="ml-auto p-0 h-4 w-4"
-            size="icon-sm"
-          />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="size-4"
+          >
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
+            <path d="M12 3l0 18"></path>
+            <path d="M12 9l4.65 -4.65"></path>
+            <path d="M12 14.3l7.37 -7.37"></path>
+            <path d="M12 19.6l8.85 -8.85"></path>
+          </svg>
         </SlotItem>
         <SlotItem asChild>
           <Link href="/" className="flex items-center justify-between">
