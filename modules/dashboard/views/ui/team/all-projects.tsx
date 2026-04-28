@@ -23,6 +23,13 @@ function ProjectsGrid({ projects }: { projects: any[] }) {
     return p.name?.toLowerCase().includes(searchQuery.trim().toLowerCase());
   });
 
+  if (!filteredProjects.length) {
+    return (
+      <p className="text-center flex items-center justify-center border h-50 mt-3 border-dashed text-sm text-muted-foreground">
+        No projects found with "{searchQuery}".
+      </p>
+    );
+  }
   return (
     <div className={cn("grid", viewType === "list" ? flexView : gridView)}>
       {filteredProjects.map((project) => (
