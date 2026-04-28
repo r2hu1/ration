@@ -1,7 +1,6 @@
 "use client";
 import { Bell, Container, Star } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { ThemeChanger } from "@/components/ui/theme-changer";
 import { Logout } from "@/modules/auth/views/ui/logout";
 import TeamSwitcher from "@/modules/auth/views/ui/team-switcher";
@@ -19,9 +18,6 @@ export default function Header() {
           <TeamSwitcher />
         </div>
         <div className="flex items-center gap-2.5">
-          <Button size="icon-sm" variant="outline">
-            <Bell size="4" />
-          </Button>
           <User />
         </div>
       </div>
