@@ -26,7 +26,6 @@ export default function TeamsNav() {
     { label: "Dashboard", href: base },
     { label: "Members", href: `${base}/members` },
     { label: "Settings", href: `${base}/settings` },
-    { label: "Danger", href: `${base}/danger` },
   ];
 
   const [indicatorStyle, setIndicatorStyle] = useState<{

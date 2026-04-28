@@ -1,15 +1,20 @@
 import { TRPCError } from "@trpc/server";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import z from "zod";
 import { db } from "@/db/client";
-import { organization } from "@/db/schema";
+import { organization, teamProject } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { sendEmail } from "@/lib/email";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 
 const createTeamSchema = z.object({
   name: z.string().min(4).max(100),
+});
+
+const updateTeamSchema = z.object({
+  teamId: z.string(),
+  description: z.string().optional(),
 });
 
 export const teamRouter = createTRPCRouter({
@@ -125,5 +130,35 @@ export const teamRouter = createTRPCRouter({
         headers: await headers(),
       });
       return data;
+    }),
+
+  update: protectedProcedure
+    .input(updateTeamSchema)
+    .mutation(async ({ input, ctx }) => {
+      const [org] = await db
+        .select()
+        .from(organization)
+        .where(eq(organization.id, input.teamId));
+
+      const existingMetadata = org.metadata ? JSON.parse(org.metadata) : {};
+      const newMetadata = {
+        ...existingMetadata,
+        description: input.description,
+      };
+
+      await db
+        .update(organization)
+        .set({
+          metadata: JSON.stringify(newMetadata),
+        })
+        .where(eq(organization.id, input.teamId));
+      return { success: true };
+    }),
+
+  delete_all_projects: protectedProcedure
+    .input(z.object({ teamId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      await db.delete(teamProject).where(eq(teamProject.teamId, input.teamId));
+      return { success: true };
     }),
 });

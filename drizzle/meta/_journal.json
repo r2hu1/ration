@@ -43,6 +43,20 @@
       "when": 1761582940124,
       "tag": "0005_gifted_true_believers",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1777388802594,
+      "tag": "0006_slimy_ultron",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1777389083298,
+      "tag": "0007_easy_bucky",
+      "breakpoints": true
     }
   ]
 }
