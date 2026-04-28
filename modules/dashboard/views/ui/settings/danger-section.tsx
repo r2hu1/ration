@@ -71,15 +71,14 @@ export default function DangerSection({
       )}
 
       {isOwner && (
-        <div className="space-y-4 rounded-md border border-destructive/20 p-4">
-          <Field>
+        <div className="rounded-md border border-destructive/20 p-4">
+          <Field className="text-destructive!">
             <FieldContent>
               <div className="flex items-center justify-between">
                 <div>
                   <FieldLabel>Delete All Projects</FieldLabel>
                   <FieldDescription>
-                    Permanently delete all projects in this team. This action
-                    cannot be undone.
+                    Permanently delete all projects in this team.
                   </FieldDescription>
                 </div>
                 <Button
@@ -93,7 +92,7 @@ export default function DangerSection({
             </FieldContent>
           </Field>
 
-          <Field>
+          <Field className="hidden">
             <FieldContent>
               <div className="flex items-center justify-between">
                 <div>

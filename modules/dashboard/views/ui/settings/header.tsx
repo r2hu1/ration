@@ -2,6 +2,10 @@
 
 import { useApp } from "@/modules/providers/middleware";
 import { Skeleton } from "@/components/ui/skeleton";
+import DeleteTeam from "../danger/delete-team";
+import LeaveTeam from "@/modules/auth/views/ui/leave-team";
+import { Button } from "@/components/ui/button";
+import { LogOut, Trash2 } from "lucide-react";
 
 export default function TeamSettingsHeader({
   loading,
@@ -27,6 +31,21 @@ export default function TeamSettingsHeader({
             )}
           </p>
         </div>
+        {loading ? (
+          <Skeleton className="h-10 w-28" />
+        ) : data == "owner" ? (
+          <DeleteTeam teamId={organization?.id!}>
+            <Button>
+              Delete <Trash2 className="size-3.5" />
+            </Button>
+          </DeleteTeam>
+        ) : (
+          <LeaveTeam slug={organization?.id!}>
+            <Button>
+              Leave <LogOut className="size-3.5" />
+            </Button>
+          </LeaveTeam>
+        )}
       </div>
     </div>
   );
