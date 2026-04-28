@@ -61,10 +61,10 @@ export default function AllMembers() {
     );
   }
 
-  if (!memberList.length) {
+  if (!filteredMembers.length) {
     return (
-      <p className="text-center text-sm text-muted-foreground">
-        No members found.
+      <p className="text-center flex items-center justify-center border h-50 mt-3 border-dashed text-sm text-muted-foreground">
+        No members found matching "{searchQuery}".
       </p>
     );
   }
