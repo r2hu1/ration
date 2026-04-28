@@ -1,24 +1,23 @@
-# Ration (self-hostable) (indev)
+# Ration (self-hostable)
 
 An encrypted cloud platform for securely storing, syncing, and managing environment variables across all your projects and teams.
 
 ## Some Previews
 
 - Landing Page
-![Screenshot](/public/preview.png)
+  ![Screenshot](/public/preview.png)
 
 - Personal Dashboard
-![Screenshot](/public/personal-dashboard.png)
+  ![Screenshot](/public/personal-dashboard.png)
 
 - Teams Dashboard
-![Screenshot](/public/teams-dashboard.png)
+  ![Screenshot](/public/teams-dashboard.png)
 
 - Projects Details Page
-![Screenshot](/public/personal-project-view.png)
+  ![Screenshot](/public/personal-project-view.png)
 
 - Team Members
-![Screenshot](/public/teams-members.png)
-
+  ![Screenshot](/public/teams-members.png)
 
 ## ✨ Features
 
@@ -41,32 +40,38 @@ An encrypted cloud platform for securely storing, syncing, and managing environm
 ## 📦 Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/r2hu1/ration.git
 cd ration
 ```
 
 2. Install dependencies:
+
 ```bash
 bun install
 ```
 
 3. Set up your environment variables:
+
 ```bash
 cp .env.example .env.local
 ```
 
 4. Configure your database connection in `.env.local`:
+
 ```env
 DATABASE_URL="postgresql://username:password@localhost:5432/ration"
 ```
 
 5. Push the database schema:
+
 ```bash
 bun run db:push
 ```
 
 6. Start the development server:
+
 ```bash
 bun run dev
 ```
@@ -129,6 +134,7 @@ This project uses PostgreSQL with Drizzle ORM. Make sure you have PostgreSQL run
 ## 🚀 Deployment
 
 1. Build the application:
+
 ```bash
 bun run build
 ```
@@ -136,11 +142,13 @@ bun run build
 2. Set up your production environment variables
 
 3. Push the database schema to production:
+
 ```bash
 bun run db:push
 ```
 
 4. Start the production server:
+
 ```bash
 bun run start
 ```
