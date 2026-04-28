@@ -75,7 +75,7 @@ export default function User() {
         </div>
         <SlotSeparator className="hidden sm:flex" />
         <SlotItem onClick={switchDashboard}>Personal Dashboard</SlotItem>
-        <SlotItem asChild>
+        <SlotItem asChild className="hidden">
           <Link href={`/~/me/settings`}>Account Settings</Link>
         </SlotItem>
         <CreateTeam>
