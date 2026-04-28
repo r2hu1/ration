@@ -74,10 +74,9 @@ export default function TeamSettings({ slug }: { slug: string }) {
       <TeamSettingsHeader loading={loading} data={role ?? undefined} />
 
       <div className="mt-8 space-y-8">
-        {role === "owner" ||
-          (role === "admin" && (
-            <TeamForm organization={organization} role={role ?? undefined} />
-          ))}
+        {(role === "owner" || role === "admin") && (
+          <TeamForm organization={organization} role={role ?? undefined} />
+        )}
 
         {(role === "owner" || role === "admin" || role === "member") && (
           <DangerSection
