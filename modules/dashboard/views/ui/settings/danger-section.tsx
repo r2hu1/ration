@@ -60,7 +60,7 @@ export default function DangerSection({
                 </div>
                 <LeaveTeam slug={teamId}>
                   <Button variant="destructive">
-                    <LogOut className="mr-2 h-4 w-4" />
+                    <LogOut className="size-4" />
                     Leave
                   </Button>
                 </LeaveTeam>
@@ -86,7 +86,7 @@ export default function DangerSection({
                   variant="destructive"
                   onClick={() => setDeleteProjectsOpen(true)}
                 >
-                  <Trash2 className="mr-2 h-4 w-4" />
+                  <Trash2 className="size-4" />
                   Delete All
                 </Button>
               </div>
@@ -108,7 +108,7 @@ export default function DangerSection({
                   onClick={() => setKickMembersOpen(true)}
                   disabled={memberCount <= 1}
                 >
-                  <Users className="mr-2 h-4 w-4" />
+                  <Users className="size-4" />
                   Kick All
                 </Button>
               </div>
@@ -127,7 +127,7 @@ export default function DangerSection({
             content=""
             confirmText={
               <>
-                {isDeletingProjects && <Loader className="mr-2 h-4 w-4" />}
+                {isDeletingProjects && <Loader className="size-4" />}
                 Delete All Projects
               </>
             }
