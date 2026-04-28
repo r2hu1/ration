@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle, Bolt, LogOut } from "lucide-react";
+import { AlertTriangle, LogOut, Settings } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useAuthState } from "@/components/providers/auth-context";
@@ -12,6 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { authClient } from "@/lib/auth-client";
 import { useTRPC } from "@/trpc/client";
 import KickUser from "./kick";
+import ChangeRole from "./change-role";
 
 export default function AllMembers() {
   const trpc = useTRPC();
@@ -100,10 +101,16 @@ export default function AllMembers() {
               (role === "admin" &&
                 member.userId !== auth.data.session.userId &&
                 !["owner", "admin"].includes(member.role))) && (
-              <div className="flex items-center gap-3">
-                <Button size="icon-sm" variant="outline">
-                  <Bolt className="size-3.5" />
-                </Button>
+              <div className="flex items-center gap-1">
+                <ChangeRole
+                  memberId={member.userId}
+                  memberName={member.user.name || "this user"}
+                  currentRole={member.role}
+                >
+                  <Button size="icon-sm" variant="outline">
+                    <Settings />
+                  </Button>
+                </ChangeRole>
 
                 <KickUser email={member.user.email}>
                   <Button size="sm" className="h-8 w-8 sm:w-auto">
